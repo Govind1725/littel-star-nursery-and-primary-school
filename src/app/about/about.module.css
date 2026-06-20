@@ -1,0 +1,252 @@
+.missionSection { background: var(--off-white); }
+
+.missionGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.missionCard {
+  text-align: center;
+  padding: 48px 36px;
+}
+
+.visionCard {
+  background: linear-gradient(135deg, var(--violet-dark), var(--violet));
+  color: var(--white);
+  border-color: transparent;
+}
+
+.visionCard h2 { color: var(--yellow); }
+.visionCard p { color: rgba(255,255,255,0.85); }
+
+.missionIcon {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  display: block;
+  animation: float 4s ease-in-out infinite;
+}
+
+.missionCard h2 {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.8rem;
+  color: var(--violet-dark);
+  margin-bottom: 16px;
+}
+
+.missionCard p {
+  color: var(--gray-500);
+  line-height: 1.8;
+}
+
+/* Values */
+.valuesSection {
+  background: linear-gradient(180deg, var(--off-white) 0%, var(--violet-light) 100%);
+}
+
+.valuesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.valueCard {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 32px 24px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-bounce);
+  border: 2px solid transparent;
+}
+
+.valueCard:hover {
+  transform: translateY(-10px);
+  border-color: var(--yellow);
+  box-shadow: var(--shadow-lg);
+}
+
+.valueIcon {
+  font-size: 2.5rem;
+  margin-bottom: 16px;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.valueCard:hover .valueIcon {
+  transform: scale(1.2) rotate(10deg);
+}
+
+.valueTitle {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.2rem;
+  color: var(--violet-dark);
+  margin-bottom: 10px;
+}
+
+.valueDesc {
+  color: var(--gray-500);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+/* Timeline */
+.timelineSection {
+  background: var(--off-white);
+}
+
+.timeline {
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px 0;
+}
+
+.timelineLine {
+  position: absolute;
+  left: 50%;
+  top: 0; bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--violet), var(--yellow));
+  transform: translateX(-50%);
+  border-radius: 2px;
+}
+
+.timelineItem {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: calc(50% + 40px);
+  margin-bottom: 40px;
+  animation: slide-in-left 0.5s ease both;
+}
+
+.timelineRight {
+  justify-content: flex-start;
+  padding-right: 0;
+  padding-left: calc(50% + 40px);
+  animation: slide-in-right 0.5s ease both;
+}
+
+.timelineContent {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  box-shadow: var(--shadow-md);
+  max-width: 280px;
+  position: relative;
+  border: 2px solid transparent;
+  transition: var(--transition);
+}
+
+.timelineContent:hover {
+  border-color: var(--yellow);
+  transform: scale(1.03);
+}
+
+.timelineYear {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.5rem;
+  color: var(--violet);
+  margin-bottom: 8px;
+}
+
+.timelineIcon {
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+}
+
+.timelineEvent {
+  color: var(--gray-700);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  font-weight: 600;
+}
+
+/* Team */
+.teamSection {
+  background: var(--violet-light);
+}
+
+.teamGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.teamCard {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 40px 24px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-bounce);
+  border: 2px solid transparent;
+}
+
+.teamCard:hover {
+  transform: translateY(-10px);
+  border-color: var(--yellow);
+  box-shadow: var(--shadow-lg);
+}
+
+.teamEmoji {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--violet-light), rgba(255,215,0,0.2));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  margin: 0 auto 20px;
+  transition: transform 0.3s ease;
+  border: 3px solid var(--yellow);
+}
+
+.teamCard:hover .teamEmoji {
+  transform: scale(1.1) rotate(10deg);
+}
+
+.teamName {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.1rem;
+  color: var(--violet-dark);
+  margin-bottom: 6px;
+}
+
+.teamRole {
+  font-weight: 700;
+  color: var(--violet);
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+
+.teamExp {
+  color: var(--gray-500);
+  font-size: 0.8rem;
+}
+
+/* CTA */
+.ctaSection {
+  background: linear-gradient(135deg, var(--yellow-light) 0%, var(--violet-light) 100%);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .teamGrid { grid-template-columns: repeat(2, 1fr); }
+  .valuesGrid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .missionGrid { grid-template-columns: 1fr; }
+  .teamGrid { grid-template-columns: repeat(2, 1fr); }
+  .valuesGrid { grid-template-columns: 1fr; }
+  .timelineItem { padding-right: 0; justify-content: center; }
+  .timelineRight { padding-left: 0; justify-content: center; }
+  .timelineLine { display: none; }
+  .timelineContent { max-width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .teamGrid { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,243 @@
+.contactSection {
+  background: var(--off-white);
+}
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 56px;
+  align-items: start;
+}
+
+/* Info Column */
+.infoCol {}
+
+.infoTitle {
+  font-family: 'Fredoka One', cursive;
+  font-size: 2rem;
+  color: var(--violet-dark);
+  margin-bottom: 12px;
+}
+
+.infoDesc {
+  color: var(--gray-500);
+  line-height: 1.7;
+  margin-bottom: 32px;
+}
+
+.infoCards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.infoCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-bounce);
+  border: 2px solid transparent;
+}
+
+.infoCard:hover {
+  border-color: var(--yellow);
+  transform: translateX(6px);
+  box-shadow: var(--shadow-md);
+}
+
+.infoIcon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  background: var(--violet-light);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.infoCardTitle {
+  font-weight: 800;
+  color: var(--violet-dark);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.infoLine {
+  color: var(--gray-700);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.quickInfo {
+  background: linear-gradient(135deg, var(--violet-dark), var(--violet));
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  color: var(--white);
+}
+
+.quickTitle {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.2rem;
+  color: var(--yellow);
+  margin-bottom: 8px;
+}
+
+.quickInfo p {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.85);
+  line-height: 1.7;
+}
+
+/* Form Column */
+.formCol {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  padding: 44px 40px;
+  box-shadow: var(--shadow-lg);
+}
+
+.formTitle {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.6rem;
+  color: var(--violet-dark);
+  margin-bottom: 28px;
+}
+
+.form { display: flex; flex-direction: column; gap: 20px; }
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formGroup label {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--gray-700);
+}
+
+.input {
+  padding: 12px 16px;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  color: var(--gray-900);
+  background: var(--off-white);
+  transition: var(--transition);
+  outline: none;
+  width: 100%;
+}
+
+.input:focus {
+  border-color: var(--violet);
+  background: var(--white);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.submitBtn {
+  width: 100%;
+  justify-content: center;
+  font-size: 1rem;
+  padding: 16px;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 3px solid rgba(76, 29, 149, 0.3);
+  border-top-color: var(--violet-dark);
+  border-radius: 50%;
+  animation: spin-slow 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+/* Success */
+.successBox {
+  text-align: center;
+  padding: 60px 40px;
+}
+
+.successIcon {
+  font-size: 4rem;
+  display: block;
+  margin-bottom: 20px;
+  animation: bounce-in 0.5s ease;
+}
+
+.successBox h3 {
+  font-family: 'Fredoka One', cursive;
+  font-size: 2rem;
+  color: var(--violet-dark);
+  margin-bottom: 12px;
+}
+
+.successBox p {
+  color: var(--gray-500);
+  margin-bottom: 28px;
+  line-height: 1.7;
+}
+
+/* Map */
+.mapSection { height: 300px; }
+
+.mapPlaceholder {
+  height: 100%;
+  background: linear-gradient(135deg, var(--violet-light), rgba(255, 215, 0, 0.2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top: 3px solid var(--yellow);
+}
+
+.mapContent { text-align: center; }
+
+.mapPin {
+  font-size: 3.5rem;
+  animation: bounce-in 0.6s ease;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.mapContent h3 {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.5rem;
+  color: var(--violet-dark);
+  margin-bottom: 8px;
+}
+
+.mapContent p {
+  color: var(--gray-500);
+  font-size: 0.95rem;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .contactGrid { grid-template-columns: 1fr; gap: 36px; }
+  .formCol { padding: 32px 24px; }
+}
+
+@media (max-width: 600px) {
+  .formRow { grid-template-columns: 1fr; }
+  .formCol { padding: 24px 16px; }
+}

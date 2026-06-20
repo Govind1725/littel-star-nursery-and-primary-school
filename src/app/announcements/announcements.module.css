@@ -1,0 +1,147 @@
+.announcementsSection {
+  background: var(--off-white);
+  min-height: 60vh;
+}
+
+/* Filters */
+.filterRow {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+  justify-content: center;
+}
+
+.filterBtn {
+  padding: 10px 20px;
+  border-radius: var(--radius-full);
+  background: var(--white);
+  border: 2px solid var(--gray-200);
+  color: var(--gray-700);
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: var(--transition-bounce);
+}
+
+.filterBtn:hover {
+  border-color: var(--violet);
+  color: var(--violet);
+  transform: translateY(-2px);
+}
+
+.filterActive {
+  background: var(--violet);
+  border-color: var(--violet);
+  color: var(--white) !important;
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* List */
+.announcementsList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.announcementCard {
+  display: flex;
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-bounce);
+  animation: slide-up 0.5s ease both;
+}
+
+.announcementCard:hover {
+  transform: translateX(8px);
+  box-shadow: var(--shadow-lg);
+}
+
+.cardLeft {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px;
+  min-width: 90px;
+  gap: 6px;
+}
+
+.cardEmoji {
+  font-size: 1.8rem;
+}
+
+.cardCategoryLabel {
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.9);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.cardBody {
+  flex: 1;
+  padding: 24px 28px;
+}
+
+.cardMeta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.cardDate {
+  font-size: 0.8rem;
+  color: var(--gray-500);
+  font-weight: 600;
+}
+
+.cardTitle {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.25rem;
+  color: var(--violet-dark);
+  margin-bottom: 10px;
+}
+
+.cardContent {
+  color: var(--gray-500);
+  line-height: 1.75;
+  font-size: 0.95rem;
+}
+
+/* Empty */
+.empty {
+  text-align: center;
+  padding: 80px 24px;
+}
+
+.emptyIcon {
+  font-size: 4rem;
+  margin-bottom: 16px;
+  animation: float 3s ease-in-out infinite;
+}
+
+.empty h3 {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.5rem;
+  color: var(--violet-dark);
+  margin-bottom: 8px;
+}
+
+.empty p {
+  color: var(--gray-500);
+}
+
+@media (max-width: 600px) {
+  .cardLeft { min-width: 70px; padding: 16px 12px; }
+  .cardBody { padding: 16px; }
+  .filterRow { gap: 8px; }
+  .filterBtn { padding: 8px 14px; font-size: 0.8rem; }
+}

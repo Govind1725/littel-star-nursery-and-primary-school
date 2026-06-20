@@ -1,0 +1,250 @@
+.footer {
+  position: relative;
+  margin-top: auto;
+}
+
+.wave {
+  line-height: 0;
+  background: var(--gray-100);
+}
+
+.wave svg {
+  width: 100%;
+  height: 80px;
+  display: block;
+}
+
+.footerBody {
+  background: var(--violet-dark);
+  padding: 60px 0 40px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.4fr;
+  gap: 48px;
+}
+
+/* Brand */
+.brand {}
+
+.logoRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.logoIcon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--yellow), var(--yellow-dark));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+  flex-shrink: 0;
+}
+
+.logoMain {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.3rem;
+  color: var(--white);
+}
+
+.logoSub {
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.6);
+  font-weight: 600;
+}
+
+.tagline {
+  color: rgba(255,255,255,0.75);
+  font-size: 0.9rem;
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+.socials {
+  display: flex;
+  gap: 12px;
+}
+
+.social {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: var(--transition-bounce);
+  cursor: pointer;
+}
+
+.social:hover {
+  transform: translateY(-4px) scale(1.1);
+}
+
+.facebook { background: #1877F2; color: #fff; }
+.instagram { background: #E4405F; color: #fff; }
+.youtube { background: #FF0000; color: #fff; }
+.whatsapp { background: #25D366; color: #fff; }
+
+/* Columns */
+.col {}
+
+.colTitle {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.15rem;
+  color: var(--yellow);
+  margin-bottom: 20px;
+}
+
+/* Links */
+.linkList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footerLink {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.75);
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: var(--transition);
+  text-decoration: none;
+}
+
+.footerLink:hover {
+  color: var(--yellow);
+  padding-left: 6px;
+}
+
+.footerLink span:first-child {
+  color: var(--yellow);
+  font-size: 0.6rem;
+}
+
+/* Contact */
+.contactList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.contactList li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: rgba(255,255,255,0.75);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.contactList li span:first-child {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.contactList a {
+  color: rgba(255,255,255,0.75);
+  transition: color 0.2s;
+  text-decoration: none;
+}
+.contactList a:hover { color: var(--yellow); }
+
+/* Hours */
+.hours {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.hourRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: rgba(255,255,255,0.75);
+  font-size: 0.88rem;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.hourTime {
+  font-weight: 700;
+  color: var(--yellow);
+}
+
+.closed {
+  color: rgba(255,255,255,0.4) !important;
+}
+
+.enrollBtn {
+  font-size: 0.9rem;
+  padding: 10px 22px;
+  width: 100%;
+  justify-content: center;
+}
+
+/* Bottom Bar */
+.bottomBar {
+  background: var(--violet-deep);
+  padding: 16px 0;
+}
+
+.bottomBar .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.bottomBar p {
+  color: rgba(255,255,255,0.5);
+  font-size: 0.85rem;
+}
+
+.bottomLinks {
+  display: flex;
+  gap: 20px;
+}
+
+.bottomLinks a {
+  color: rgba(255,255,255,0.5);
+  font-size: 0.85rem;
+  transition: color 0.2s;
+  text-decoration: none;
+}
+
+.bottomLinks a:hover {
+  color: var(--yellow);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 36px;
+  }
+}
+
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .bottomBar .container {
+    flex-direction: column;
+    text-align: center;
+  }
+}

@@ -1,0 +1,187 @@
+/* ===== PROCESS SECTION ===== */
+.processSection {
+  background: var(--off-white);
+}
+
+.stepsGrid {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.stepCard {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  padding: 40px 24px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  flex: 1;
+  position: relative;
+  transition: var(--transition-bounce);
+  border: 2px solid transparent;
+}
+
+.stepCard:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--yellow);
+}
+
+.stepNum {
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--yellow), var(--yellow-dark));
+  color: var(--violet-dark);
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.2rem;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: var(--shadow-sm);
+}
+
+.stepIcon {
+  font-size: 3.5rem;
+  margin-bottom: 20px;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.stepCard:hover .stepIcon {
+  transform: scale(1.15) rotate(5deg);
+}
+
+.stepTitle {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.2rem;
+  color: var(--violet-dark);
+  margin-bottom: 12px;
+}
+
+.stepDesc {
+  color: var(--gray-600);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.stepArrow {
+  position: absolute;
+  top: 50%;
+  right: -24px;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  color: var(--violet);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+@media (max-width: 992px) {
+  .stepsGrid {
+    flex-direction: column;
+    gap: 40px;
+    max-width: 400px;
+  }
+  .stepArrow {
+    top: auto;
+    bottom: -32px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%) rotate(90deg);
+  }
+}
+
+
+/* ===== FAQ SECTION ===== */
+.faqSection {
+  background: linear-gradient(180deg, var(--violet-light) 0%, var(--off-white) 100%);
+}
+
+.faqList {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.faqItem {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border-left: 6px solid transparent;
+}
+
+.faqHeader {
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.faqQ {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.1rem;
+  color: var(--violet-dark);
+  margin: 0;
+  padding-right: 20px;
+}
+
+.faqToggle {
+  font-family: monospace;
+  font-size: 1.5rem;
+  color: var(--gray-500);
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.faqBody {
+  max-height: 0;
+  padding: 0 24px;
+  opacity: 0;
+  transition: all 0.3s ease;
+  background: var(--off-white);
+}
+
+.faqA {
+  color: var(--gray-600);
+  line-height: 1.7;
+  padding-bottom: 24px;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.faqItem:hover {
+  border-left-color: var(--yellow);
+}
+
+.faqItem.faqOpen {
+  border-left-color: var(--violet);
+  box-shadow: var(--shadow-md);
+}
+
+.faqItem.faqOpen .faqBody {
+  max-height: 500px; /* arbitrary large height for animation */
+  padding-top: 20px;
+  opacity: 1;
+}
+
+.faqItem.faqOpen .faqHeader {
+  background: var(--violet-dark);
+}
+
+.faqItem.faqOpen .faqQ,
+.faqItem.faqOpen .faqToggle {
+  color: var(--white);
+}
