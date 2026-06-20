@@ -56,25 +56,25 @@
 
 .mediaCard {
   background: var(--white);
-  border-radius: var(--radius-lg);
+  border-radius: 20px;
   overflow: hidden;
   box-shadow: var(--shadow-sm);
   cursor: pointer;
-  transition: var(--transition-bounce);
+  transition: all 300ms ease;
   animation: slide-up 0.5s ease both;
   border: 2px solid transparent;
 }
 
 .mediaCard:hover {
-  transform: translateY(-10px) scale(1.02);
-  box-shadow: var(--shadow-lg);
+  transform: scale(1.03);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
   border-color: var(--yellow);
 }
 
 /* Thumbnail */
 .mediaThumb {
   position: relative;
-  height: 220px;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
 }
 
@@ -89,16 +89,14 @@
   width: 100%;
   height: 100%;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
 }
 
 .thumbEmoji {
-  font-size: 3.5rem;
+  font-size: 5rem;
   animation: float 3s ease-in-out infinite;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
 }
 
 .thumbType {
@@ -246,7 +244,7 @@
 
 .lightboxMedia img,
 .lightboxMedia video {
-  max-height: 500px;
+  max-height: 70vh;
   max-width: 100%;
   object-fit: contain;
 }
