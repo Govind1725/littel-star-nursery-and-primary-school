@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { getMediaItems, type MediaItem } from '@/lib/store';
 import styles from './gallery.module.css';
 
@@ -19,11 +19,57 @@ export default function GalleryPage() {
   const [filter, setFilter] = useState<'all' | 'image' | 'video'>('all');
   const [lightbox, setLightbox] = useState<MediaItem | null>(null);
   const [mounted, setMounted] = useState(false);
+  const [counted, setCounted] = useState<Set<number>>(new Set());
+  const [counts, setCounts] = useState<number[]>([0, 0, 0]);
+  const statsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
     setMedia(getMediaItems());
   }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+    const el = statsRef.current;
+    if (!el) return;
+
+    const photos = media.filter((m) => m.type === 'image').length;
+    const videos = media.filter((m) => m.type === 'video').length;
+    const total = media.length;
+    const statValues = [photos, videos, total];
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          statValues.forEach((value, i) => {
+            if (counted.has(i)) return;
+            const duration = 2000;
+            const steps = 30;
+            const increment = value / steps;
+            let current = 0;
+            const timer = setInterval(() => {
+              current += increment;
+              if (current >= value) {
+                current = value;
+                clearInterval(timer);
+              }
+              setCounts((prev) => {
+                const next = [...prev];
+                next[i] = Math.floor(current);
+                return next;
+              });
+            }, duration / steps);
+            setCounted((prev) => new Set(prev).add(i));
+          });
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [mounted, media]);
 
   const filtered = filter === 'all' ? media : media.filter((m) => m.type === filter);
 
@@ -37,6 +83,23 @@ export default function GalleryPage() {
           <span className="badge">📸 Memories</span>
           <h1>Our Gallery</h1>
           <p>Glimpses of joy, learning, and unforgettable moments at Little Star.</p>
+          <div className={styles.heroStats} ref={statsRef}>
+            <div className={styles.heroStat}>
+              <span className={styles.heroStatIcon}>🖼️</span>
+              <span className={styles.heroStatNum}>{counts[0]}</span>
+              <span className={styles.heroStatLabel}>Photos</span>
+            </div>
+            <div className={styles.heroStat}>
+              <span className={styles.heroStatIcon}>🎬</span>
+              <span className={styles.heroStatNum}>{counts[1]}</span>
+              <span className={styles.heroStatLabel}>Videos</span>
+            </div>
+            <div className={styles.heroStat}>
+              <span className={styles.heroStatIcon}>📸</span>
+              <span className={styles.heroStatNum}>{counts[2]}</span>
+              <span className={styles.heroStatLabel}>Memories</span>
+            </div>
+          </div>
         </div>
       </section>
 
