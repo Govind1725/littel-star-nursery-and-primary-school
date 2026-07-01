@@ -114,8 +114,6 @@ export default function AnnouncementsPage() {
     });
   };
 
-  if (!mounted) return null;
-
   return (
     <>
       {/* Hero */}
@@ -144,7 +142,22 @@ export default function AnnouncementsPage() {
           </div>
 
           {/* Announcements List */}
-          {filtered.length === 0 ? (
+          {!mounted ? (
+            <div className={styles.announcementsList}>
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className={`${styles.announcementCard} ${styles.skeletonCard}`}>
+                  <div className={`${styles.cardLeft} ${styles.skeleton}`} style={{ background: 'var(--gray-200)' }}>
+                    <div style={{ width: '48px', height: '48px' }} />
+                  </div>
+                  <div className={styles.cardBody} style={{ width: '100%' }}>
+                    <div className={styles.skeleton} style={{ height: '14px', borderRadius: '4px', width: '30%', marginBottom: '12px' }} />
+                    <div className={styles.skeleton} style={{ height: '22px', borderRadius: '6px', width: '60%', marginBottom: '12px' }} />
+                    <div className={styles.skeleton} style={{ height: '16px', borderRadius: '4px', width: '80%' }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : filtered.length === 0 ? (
             <div className={styles.empty}>
               <div className={styles.emptyIcon}>📭</div>
               <h3>No announcements yet</h3>

@@ -16,7 +16,7 @@ const contactInfo = [
 const programs = [
   {
     img: '/images/program_toddler.png',
-    age: '1.5 – 2.5 Years',
+    age: '2.5 – 3.5 Years',
     badge: '🍼 Toddler',
     title: 'Toddler Program',
     desc: 'A gentle introduction to group learning through sensory play, music, and movement in a nurturing environment.',
@@ -24,7 +24,7 @@ const programs = [
   },
   {
     img: '/images/program_preschool.png',
-    age: '2.5 – 3.5 Years',
+    age: '3.5 – 4.5 Years',
     badge: '🌱 Nursery',
     title: 'Nursery (LKG)',
     desc: 'Building foundations in language, numbers, art, and social skills through joyful activity-based learning.',
@@ -32,7 +32,7 @@ const programs = [
   },
   {
     img: '/images/program_prek.png',
-    age: '3.5 – 5 Years',
+    age: '4.5 – 5.5 Years',
     badge: '🎒 Pre-KG',
     title: 'Pre-KG / UKG',
     desc: 'Preparing confident learners for primary school with literacy, numeracy, and critical thinking skills.',
@@ -66,8 +66,8 @@ const lifeAtSchool = [
 const stats = [
   { value: 500, suffix: '+', label: 'Happy Students' },
   { value: 25, suffix: '+', label: 'Expert Teachers' },
-  { value: 14, suffix: '+', label: 'Years of Excellence' },
-  { value: 98, suffix: '%', label: 'Parent Satisfaction' },
+  { value: 25, suffix: '+', label: 'Years of Excellence' },
+  { value: 98, suffix: '%', label: 'Exceptional Parents' },
 ];
 
 const testimonials = [
@@ -97,7 +97,7 @@ const announcements = [
   { date: 'June 10, 2026', tag: '🏆 Achievement', title: 'State Science Fair Winners', desc: 'Our Grade 4 students won gold at the Tamil Nadu State Science Exhibition!' },
 ];
 
-const floatingItems = ['⭐', '🌟', '✨', '🎈', '🦋', '🌸', '🎨', '📚'];
+
 
 const galleryEmojis = ['🎨', '📸', '🌸', '🎭', '🏃', '🎵', '🔬', '🌿', '🎉', '🏆', '📚', '🤝'];
 const placeholderColors = [
@@ -181,33 +181,58 @@ export default function HomePage() {
       <section className={styles.hero}>
         <div className={styles.heroBg} />
 
-        {floatingItems.map((item, i) => (
-          <div
-            key={i}
-            className={styles.floatingItem}
-            style={{
-              left: `${10 + i * 12}%`,
-              top: `${20 + (i % 3) * 20}%`,
-              animationDelay: `${i * 0.5}s`,
-              animationDuration: `${3 + (i % 3)}s`,
-              fontSize: `${1.2 + (i % 3) * 0.5}rem`,
-            }}
-          >
-            {item}
-          </div>
-        ))}
+        <div className={styles.decorativeElements}>
+          {/* Dotted Curves */}
+          <svg className={styles.decoCurves} viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <path d="M-100,250 Q250,50 600,300 T1500,200" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" strokeDasharray="6 6" />
+            <path d="M-50,650 Q400,800 850,550 T1550,600" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" strokeDasharray="6 6" />
+          </svg>
+
+          {/* Stars */}
+          <div className={`${styles.decoStar} ${styles.starYellow}`} style={{ top: '25%', left: '20%' }}>★</div>
+          <div className={`${styles.decoStar} ${styles.starYellow}`} style={{ top: '25%', right: '25%' }}>★</div>
+          <div className={`${styles.decoStar} ${styles.starOrange}`} style={{ top: '15%', left: '8%' }}>★</div>
+          <div className={`${styles.decoStar} ${styles.starOrange}`} style={{ top: '30%', right: '5%' }}>★</div>
+          <div className={`${styles.decoStar} ${styles.starOrange}`} style={{ bottom: '25%', left: '10%' }}>★</div>
+          <div className={`${styles.decoStar} ${styles.starOrange}`} style={{ bottom: '10%', right: '15%' }}>★</div>
+
+          {/* Butterfly Outline */}
+          <svg className={styles.decoButterfly} style={{ top: '20%', right: '15%' }} width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1.2">
+            <path d="M12 22s-3-2-3-8c0-3.5 1-4.5 1-4.5S6.5 9 4 12c0 0-2-3 1-6.5C8 2 12 7 12 7s4-5 7-1.5C22 9 20 12 20 12c-2.5-3-6-2.5-6-2.5s1 1 1 4.5c0 6-3 8-3 8z" />
+            <path d="M12 22v-8" />
+            <path d="M11 7c-1-2-3-4-5-4" />
+            <path d="M13 7c1-2 3-4 5-4" />
+          </svg>
+
+          {/* Book Outline */}
+          <svg className={styles.decoBook} style={{ bottom: '30%', right: '8%' }} width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1.2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+          </svg>
+
+          {/* Small Sparkles */}
+          <div className={styles.decoSparkle} style={{ top: '15%', left: '25%' }}>✦</div>
+          <div className={styles.decoSparkle} style={{ top: '40%', right: '10%' }}>✦</div>
+          <div className={styles.decoSparkle} style={{ bottom: '20%', left: '25%' }}>✦</div>
+        </div>
 
         <div className={`container ${styles.heroContent}`}>
           <div className={styles.heroBadge}>
             <span className={styles.badgeDot} />
-            Admissions Open 2026-27
+            ADMISSIONS OPEN 2026-27
           </div>
 
-          <h1 className={styles.heroTitle}>
-            Where Every Child
-            <br />
-            <span className={styles.heroHighlight}>Shines Like a Star</span>
-          </h1>
+          <div className={styles.heroTitleWrapper}>
+            <div className={styles.heroWelcome}>Welcome to</div>
+            <h1 className={styles.heroMainTitle}>LITTLE STAR</h1>
+            <div className={styles.heroSubTitle}>Nursery &amp; Primary School</div>
+            <div className={styles.heroBottomBadge}>
+              <span className={styles.starIcon}>★</span> STAR KIDS Pre-School &amp; Day Care
+            </div>
+            <div className={styles.heroDaycareHours}>
+              Day care Available from 8:30 am to 8 pm.
+            </div>
+          </div>
 
           <p className={styles.heroDesc}>
             Welcome to Little Star Nursery &amp; Primary School — a vibrant, nurturing place where young
@@ -224,7 +249,7 @@ export default function HomePage() {
           </div>
 
           <div className={styles.heroStats}>
-            {stats.map((s, i) => (
+            {stats.slice(2).map((s, i) => (
               <div key={i} className={styles.heroStat}>
                 <div className={styles.heroStatNum}>{s.value}{s.suffix}</div>
                 <div className={styles.heroStatLabel}>{s.label}</div>
@@ -237,6 +262,36 @@ export default function HomePage() {
           <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
             <path d="M0,0 C480,80 960,80 1440,0 L1440,80 L0,80 Z" fill="#FAFAFA" />
           </svg>
+        </div>
+      </section>
+
+      {/* ===== ANNOUNCEMENTS ===== */}
+      <section className={`section-padding ${styles.announcementsSection}`}>
+        <div className="container">
+          <div className={styles.announcementsHeader}>
+            <div>
+              <span className="badge">📢 Latest Updates</span>
+              <h2 className="section-title" style={{ marginBottom: 0 }}>School Announcements</h2>
+            </div>
+            <Link href="/announcements" className="btn-outline" id="home-announcements-btn">
+              View All →
+            </Link>
+          </div>
+          <div className={styles.announcementsGrid}>
+            {announcements.map((a, i) => (
+              <div key={i} className={styles.announcementCard} style={{ animationDelay: `${i * 0.1}s` }}>
+                <div className={styles.announcementMeta}>
+                  <span className={styles.announcementTag}>{a.tag}</span>
+                  <span className={styles.announcementDate}>{a.date}</span>
+                </div>
+                <h3 className={styles.announcementTitle}>{a.title}</h3>
+                <p className={styles.announcementDesc}>{a.desc}</p>
+                <Link href="/announcements" className={styles.announcementLink} id={`announcement-${i}-btn`}>
+                  Read More →
+                </Link>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -438,36 +493,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== ANNOUNCEMENTS ===== */}
-      <section className={`section-padding ${styles.announcementsSection}`}>
-        <div className="container">
-          <div className={styles.announcementsHeader}>
-            <div>
-              <span className="badge">📢 Latest Updates</span>
-              <h2 className="section-title" style={{ marginBottom: 0 }}>School Announcements</h2>
-            </div>
-            <Link href="/announcements" className="btn-outline" id="home-announcements-btn">
-              View All →
-            </Link>
-          </div>
-          <div className={styles.announcementsGrid}>
-            {announcements.map((a, i) => (
-              <div key={i} className={styles.announcementCard} style={{ animationDelay: `${i * 0.1}s` }}>
-                <div className={styles.announcementMeta}>
-                  <span className={styles.announcementTag}>{a.tag}</span>
-                  <span className={styles.announcementDate}>{a.date}</span>
-                </div>
-                <h3 className={styles.announcementTitle}>{a.title}</h3>
-                <p className={styles.announcementDesc}>{a.desc}</p>
-                <Link href="/announcements" className={styles.announcementLink} id={`announcement-${i}-btn`}>
-                  Read More →
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ===== GALLERY PREVIEW ===== */}
       <section className={`section-padding ${styles.gallery}`}>
         <div className="container">
@@ -480,7 +505,7 @@ export default function HomePage() {
           </div>
           <div className={styles.marqueeWrap}>
             <div className={styles.marqueeTrack}>
-              {[...media, ...media].length > 0
+              {mounted && [...media, ...media].length > 0
                 ? [...media, ...media].map((item, i) => (
                     <div key={`${item.id}-${i}`} className={styles.marqueeItem}>
                       {item.url ? (

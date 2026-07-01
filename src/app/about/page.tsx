@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import styles from './about.module.css';
 import Link from 'next/link';
+import TimelineSection from '@/components/TimelineSection';
 
 export const metadata: Metadata = {
   title: 'About Us',
@@ -23,15 +24,6 @@ const values = [
   { title: 'Growth', desc: 'Continuous improvement for students, staff, and the school as a whole.' },
 ];
 
-const milestones = [
-  { year: '2010', event: 'Little Star was founded with 30 students' },
-  { year: '2013', event: 'Expanded to include Primary classes (Grade 1–3)' },
-  { year: '2016', event: 'Achieved State Best School Award' },
-  { year: '2019', event: 'Launched Smart Classroom initiative' },
-  { year: '2022', event: 'Reached 500+ student milestone' },
-  { year: '2024', event: 'Upgraded campus with new sports facilities' },
-];
-
 export default function AboutPage() {
   return (
     <>
@@ -40,7 +32,7 @@ export default function AboutPage() {
         <div className="container">
           <span className="badge">Our Story</span>
           <h1>About Little Star</h1>
-          <p>A legacy of nurturing young minds with love, creativity, and excellence since 2010.</p>
+          <p>A legacy of nurturing young minds with love, creativity, and excellence since 2001.</p>
         </div>
       </section>
 
@@ -91,26 +83,7 @@ export default function AboutPage() {
       </section>
 
       {/* Timeline */}
-      <section className={`section-padding ${styles.timelineSection}`}>
-        <div className="container">
-          <div className="text-center">
-            <span className="badge">Our Journey</span>
-            <h2 className="section-title">Milestones Over the Years</h2>
-            <p className="section-subtitle">From humble beginnings to a thriving school community.</p>
-          </div>
-          <div className={styles.timeline}>
-            {milestones.map((m, i) => (
-              <div key={i} className={`${styles.timelineItem} ${i % 2 === 0 ? styles.timelineLeft : styles.timelineRight}`}>
-                <div className={styles.timelineContent}>
-                  <div className={styles.timelineYear}>{m.year}</div>
-                  <p className={styles.timelineEvent}>{m.event}</p>
-                </div>
-              </div>
-            ))}
-            <div className={styles.timelineLine} />
-          </div>
-        </div>
-      </section>
+      <TimelineSection />
 
       {/* Team */}
       <section className={`section-padding ${styles.teamSection}`}>

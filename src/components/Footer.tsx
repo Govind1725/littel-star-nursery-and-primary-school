@@ -1,7 +1,19 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styles from './Footer.module.css';
 
 export default function Footer() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
   return (
     <footer className={styles.footer}>
       {/* Wavy top border */}
@@ -27,7 +39,7 @@ export default function Footer() {
                 </div>
               </div>
               <p className={styles.tagline}>
-                Where every child shines bright! 🌟 Little Star Nursery &amp; Primary School | Star Kids Pre School &amp; Day Care | Star Tuition Centre — Nurturing young minds since 2010.
+                Where every child shines bright! 🌟 Little Star Nursery &amp; Primary School | Star Kids Pre School &amp; Day Care | Star Tuition Centre — Nurturing young minds since 2001.
               </p>
               <div className={styles.socials}>
                 <a href="#" className={`${styles.social} ${styles.facebook}`} aria-label="Facebook" id="footer-facebook">

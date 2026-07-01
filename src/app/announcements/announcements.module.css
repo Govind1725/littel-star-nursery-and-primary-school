@@ -145,3 +145,13 @@
   .filterRow { gap: 8px; }
   .filterBtn { padding: 8px 14px; font-size: 0.8rem; }
 }
+
+.skeleton {
+  background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-200) 50%, var(--gray-100) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+
+.skeletonCard {
+  pointer-events: none;
+}

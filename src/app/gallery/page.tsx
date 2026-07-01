@@ -73,8 +73,6 @@ export default function GalleryPage() {
 
   const filtered = filter === 'all' ? media : media.filter((m) => m.type === filter);
 
-  if (!mounted) return null;
-
   return (
     <>
       {/* Hero */}
@@ -125,7 +123,19 @@ export default function GalleryPage() {
           </p>
 
           {/* Grid */}
-          {filtered.length === 0 ? (
+          {!mounted ? (
+            <div className={styles.galleryGrid}>
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className={`${styles.mediaCard} ${styles.skeletonCard}`}>
+                  <div className={`${styles.mediaThumb} ${styles.skeleton}`} />
+                  <div className={styles.mediaInfo}>
+                    <div className={styles.skeleton} style={{ height: '20px', borderRadius: '6px', marginBottom: '8px', width: '60%' }} />
+                    <div className={styles.skeleton} style={{ height: '14px', borderRadius: '4px', width: '40%' }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : filtered.length === 0 ? (
             <div className={styles.empty}>
               <div className={styles.emptyIcon}>🖼️</div>
               <h3>No media yet</h3>

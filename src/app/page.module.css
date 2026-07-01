@@ -8,16 +8,61 @@
   justify-content: center;
   overflow: hidden;
   padding: 120px 0 60px;
-  background: var(--violet-dark);
+  background: radial-gradient(ellipse at 50% 40%, #3e127a 0%, #15053a 100%);
 }
 
 .heroBg {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 20% 30%, rgba(255,215,0,0.12) 0%, transparent 60%),
-              radial-gradient(circle at 80% 70%, rgba(255,255,255,0.06) 0%, transparent 50%);
+  background: radial-gradient(circle at 20% 30%, rgba(255,215,0,0.08) 0%, transparent 50%),
+              radial-gradient(circle at 80% 70%, rgba(124,58,237,0.15) 0%, transparent 60%);
   z-index: 0;
   pointer-events: none;
+}
+
+.decorativeElements {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.decoCurves {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0.6;
+}
+
+.decoStar {
+  position: absolute;
+  animation: twinkle 3s ease-in-out infinite;
+}
+
+.starYellow {
+  color: #FFD700;
+  font-size: 1.2rem;
+  filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.6));
+}
+
+.starOrange {
+  color: #CD853F;
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+.decoSparkle {
+  position: absolute;
+  color: rgba(255,255,255,0.4);
+  font-size: 1rem;
+  animation: float 4s ease-in-out infinite;
+}
+
+.decoButterfly, .decoBook {
+  position: absolute;
+  animation: float-slow 6s ease-in-out infinite;
 }
 
 .floatingItem {
@@ -74,19 +119,77 @@
   50% { opacity: 0.5; }
 }
 
-.heroTitle {
-  font-family: var(--font-heading);
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  line-height: 1.15;
-  color: var(--white);
+.heroTitleWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
   margin: 0;
 }
 
-.heroHighlight {
-  background: linear-gradient(135deg, var(--yellow), var(--yellow-dark));
+.heroWelcome {
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: var(--white);
+  font-weight: 500;
+  margin-bottom: 0;
+  line-height: 1.2;
+}
+
+.heroMainTitle {
+  font-family: var(--font-heading);
+  font-size: clamp(3.5rem, 8vw, 7rem);
+  font-weight: 900;
+  line-height: 1.1;
+  background: linear-gradient(to bottom, #FFF3B0 0%, #FFD700 50%, #FF8C00 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  filter: drop-shadow(0px 4px 4px rgba(0,0,0,0.25)) drop-shadow(0px 0px 15px rgba(255, 165, 0, 0.35));
+  letter-spacing: 2px;
+  margin: 0;
+}
+
+.heroSubTitle {
+  font-family: var(--font-body);
+  font-size: clamp(1.4rem, 3vw, 2.8rem);
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: 0.5px;
+  margin-top: -5px;
+}
+
+.heroBottomBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1.5px solid var(--yellow);
+  border-radius: var(--radius-full);
+  padding: 8px 24px;
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  font-weight: 700;
+  color: var(--yellow);
+  margin-top: 16px;
+  background: rgba(255, 215, 0, 0.05);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.15);
+}
+
+.starIcon {
+  color: var(--yellow);
+  font-size: 1.2rem;
+}
+
+.heroDaycareHours {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-top: 12px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.clockIcon {
+  font-size: 1.1rem;
 }
 
 .heroStar {
