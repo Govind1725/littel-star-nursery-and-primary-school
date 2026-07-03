@@ -16,7 +16,10 @@ export async function POST(req: NextRequest) {
 
     // Cloud storage upload if BLOB token is configured on Vercel
     if (process.env.BLOB_READ_WRITE_TOKEN) {
-      const blob = await put(filename, file, { access: 'public' });
+      const blob = await put(filename, file, { 
+        access: 'public',
+        storeId: process.env.littelstarnp_STORE_ID,
+      });
       return NextResponse.json({ url: blob.url });
     }
 
