@@ -76,7 +76,7 @@ export default function ChildCarePage() {
                 { time: '10:45 – 11:00 AM', title: 'Morning break', icon: '/images/routine_break.png', bg: '#C2DBFF' },
                 { time: '12:30 – 1:15 PM', title: 'Lunch break', icon: '/images/routine_lunch.png', bg: '#FFD1D1' },
               ].map((item, i) => (
-                <div key={i} className={`${styles.routineCard} ${item.active ? styles.activeCard : ''}`}>
+                <div key={i} className={styles.routineCard}>
                   <div className={styles.routineIconWrapper} style={{ backgroundColor: item.bg }}>
                     <img src={item.icon} alt={item.title} width={64} height={64} className={styles.routineIconImg} />
                   </div>

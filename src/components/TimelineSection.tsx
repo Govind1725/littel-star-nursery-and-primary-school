@@ -37,7 +37,8 @@ export default function TimelineSection() {
             line.style.height = `${scrollPercent * 100}%`;
 
             const lineBottom = rect.top + rect.height * scrollPercent;
-            items.forEach((item) => {
+            items.forEach((el) => {
+              const item = el as HTMLElement;
               const itemTop = item.getBoundingClientRect().top + item.offsetHeight / 2;
               if (itemTop <= lineBottom) {
                 item.classList.add(styles.visible);
