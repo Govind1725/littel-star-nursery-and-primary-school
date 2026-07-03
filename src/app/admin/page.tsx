@@ -50,7 +50,7 @@ export default function AdminPage() {
   }, []);
 
   async function loadData() {
-    setMedia(getMediaItems());
+    setMedia(await getMediaItems());
     const items = await getAnnouncements();
     setAnnouncements(items);
   }
@@ -112,8 +112,9 @@ export default function AdminPage() {
       finalUrl = mediaForm.url;
     }
 
-    addMediaItem({ type: mediaForm.type, title: mediaForm.title, description: mediaForm.description, url: finalUrl });
-    setMedia(getMediaItems());
+    await addMediaItem({ type: mediaForm.type, title: mediaForm.title, description: mediaForm.description, url: finalUrl });
+    const items = await getMediaItems();
+    setMedia(items);
     setMediaForm({ type: 'image', title: '', description: '', url: '' });
     setPreviewUrl('');
     if (fileInputRef.current) fileInputRef.current.value = '';
@@ -122,9 +123,10 @@ export default function AdminPage() {
     setTimeout(() => setMediaSuccess(''), 3000);
   }
 
-  function handleDeleteMedia(id: string) {
-    deleteMediaItem(id);
-    setMedia(getMediaItems());
+  async function handleDeleteMedia(id: string) {
+    await deleteMediaItem(id);
+    const items = await getMediaItems();
+    setMedia(items);
     setDeleteConfirm(null);
   }
 

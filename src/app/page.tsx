@@ -130,30 +130,33 @@ export default function HomePage() {
     setSubmitted(true);
   };
 
-  const fetchHomeAnnouncements = useCallback(async () => {
-    const items = await getAnnouncements();
-    setHomeAnnouncements(items);
+  const fetchHomeData = useCallback(async () => {
+    const [annItems, mediaItems] = await Promise.all([
+      getAnnouncements(),
+      getMediaItems(),
+    ]);
+    setHomeAnnouncements(annItems);
+    setMedia(mediaItems.filter((m) => m.type === 'image'));
   }, []);
 
   useEffect(() => {
     setMounted(true);
-    setMedia(getMediaItems().filter((m) => m.type === 'image'));
-    fetchHomeAnnouncements();
+    fetchHomeData();
 
     // Refetch when page gets focus
     const handleFocus = () => {
-      fetchHomeAnnouncements();
+      fetchHomeData();
     };
     window.addEventListener('focus', handleFocus);
 
     // Auto-refresh poll every 10 seconds to sync different devices
-    const interval = setInterval(fetchHomeAnnouncements, 10000);
+    const interval = setInterval(fetchHomeData, 10000);
 
     return () => {
       window.removeEventListener('focus', handleFocus);
       clearInterval(interval);
     };
-  }, [fetchHomeAnnouncements]);
+  }, [fetchHomeData]);
 
   useEffect(() => {
     const el = statsRef.current;

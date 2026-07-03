@@ -16,50 +16,38 @@ export interface Announcement {
   createdAt: string;
 }
 
-const MEDIA_KEY = 'lsn_media';
-
-// ========== MEDIA ==========
-export function getMediaItems(): MediaItem[] {
-  if (typeof window === 'undefined') return [];
+// ========== MEDIA (API-backed, centralized database) ==========
+export async function getMediaItems(): Promise<MediaItem[]> {
   try {
-    const data = localStorage.getItem(MEDIA_KEY);
-    return data ? JSON.parse(data) : getDefaultMedia();
+    const res = await fetch('/api/media', { cache: 'no-store' });
+    if (!res.ok) return [];
+    return res.json();
   } catch {
-    return getDefaultMedia();
+    return [];
   }
 }
 
-export function saveMediaItems(items: MediaItem[]): void {
-  if (typeof window === 'undefined') return;
-  localStorage.setItem(MEDIA_KEY, JSON.stringify(items));
+export async function addMediaItem(item: Omit<MediaItem, 'id' | 'createdAt'>): Promise<MediaItem | null> {
+  try {
+    const res = await fetch('/api/media', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(item),
+    });
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    return null;
+  }
 }
 
-export function addMediaItem(item: Omit<MediaItem, 'id' | 'createdAt'>): MediaItem {
-  const newItem: MediaItem = {
-    ...item,
-    id: Date.now().toString(),
-    createdAt: new Date().toISOString(),
-  };
-  const items = getMediaItems();
-  items.unshift(newItem);
-  saveMediaItems(items);
-  return newItem;
-}
-
-export function deleteMediaItem(id: string): void {
-  const items = getMediaItems().filter((item) => item.id !== id);
-  saveMediaItems(items);
-}
-
-function getDefaultMedia(): MediaItem[] {
-  return [
-    { id: '1', type: 'image', url: '', title: 'Annual Sports Day', description: 'Students participating in sports day activities', createdAt: '2024-01-15T10:00:00Z' },
-    { id: '2', type: 'image', url: '', title: 'Art Exhibition', description: 'Showcase of student artworks', createdAt: '2024-02-10T09:00:00Z' },
-    { id: '3', type: 'image', url: '', title: 'Science Fair', description: 'Young scientists at work', createdAt: '2024-03-05T11:00:00Z' },
-    { id: '4', type: 'image', url: '', title: 'Graduation Ceremony', description: 'Nursery graduation celebration', createdAt: '2024-04-01T09:00:00Z' },
-    { id: '5', type: 'image', url: '', title: 'Cultural Program', description: 'Dance and music performances', createdAt: '2024-05-20T10:00:00Z' },
-    { id: '6', type: 'image', url: '', title: 'Classroom Activities', description: 'Learning through play', createdAt: '2024-06-01T09:00:00Z' },
-  ];
+export async function deleteMediaItem(id: string): Promise<boolean> {
+  try {
+    const res = await fetch(`/api/media/${id}`, { method: 'DELETE' });
+    return res.ok;
+  } catch {
+    return false;
+  }
 }
 
 // ========== ANNOUNCEMENTS (API-backed, centralized database) ==========

@@ -20,9 +20,28 @@ export default function GalleryPage() {
   const [lightbox, setLightbox] = useState<MediaItem | null>(null);
   const [mounted, setMounted] = useState(false);
 
+  const fetchGallery = async () => {
+    const items = await getMediaItems();
+    setMedia(items);
+  };
+
   useEffect(() => {
     setMounted(true);
-    setMedia(getMediaItems());
+    fetchGallery();
+
+    // Refetch when browser window is focused
+    const handleFocus = () => {
+      fetchGallery();
+    };
+    window.addEventListener('focus', handleFocus);
+
+    // Auto-refresh poll every 10 seconds to sync different devices
+    const interval = setInterval(fetchGallery, 10000);
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+      clearInterval(interval);
+    };
   }, []);
 
   const filtered = filter === 'all' ? media : media.filter((m) => m.type === filter);
