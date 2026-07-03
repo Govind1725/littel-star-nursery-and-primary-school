@@ -8,8 +8,8 @@ const noCacheHeaders = {
   'Surrogate-Control': 'no-store',
 };
 
-export async function PUT(request: NextRequest, { params }: { params: any }) {
-  const { id } = await params;
+export async function PUT(request: NextRequest, context: { params: Promise<unknown> }) {
+  const { id } = (await context.params) as { id: string };
   const body = await request.json();
   const items = await readAnnouncements();
   const index = items.findIndex((item) => item.id === id);
@@ -30,8 +30,8 @@ export async function PUT(request: NextRequest, { params }: { params: any }) {
   return NextResponse.json(items[index], { headers: noCacheHeaders });
 }
 
-export async function DELETE(_request: NextRequest, { params }: { params: any }) {
-  const { id } = await params;
+export async function DELETE(_request: NextRequest, context: { params: Promise<unknown> }) {
+  const { id } = (await context.params) as { id: string };
   const items = await readAnnouncements();
   const index = items.findIndex((item) => item.id === id);
 
