@@ -27,6 +27,7 @@ export default function AdminPage() {
   const [mediaForm, setMediaForm] = useState({ type: 'image' as 'image' | 'video', title: '', description: '', url: '' });
   const [mediaLoading, setMediaLoading] = useState(false);
   const [mediaSuccess, setMediaSuccess] = useState('');
+  const [mediaError, setMediaError] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState('');
 
@@ -35,6 +36,7 @@ export default function AdminPage() {
   const [annForm, setAnnForm] = useState({ title: '', content: '', category: 'general' as Announcement['category'], date: '' });
   const [annLoading, setAnnLoading] = useState(false);
   const [annSuccess, setAnnSuccess] = useState('');
+  const [annError, setAnnError] = useState('');
 
   const [deleteConfirm, setDeleteConfirm] = useState<{ type: 'media' | 'ann'; id: string } | null>(null);
 
@@ -92,71 +94,162 @@ export default function AdminPage() {
 
   async function handleAddMedia(e: React.FormEvent) {
     e.preventDefault();
-    if (!mediaForm.title.trim()) return;
-    setMediaLoading(true);
-
-    let finalUrl = mediaForm.url;
+    setMediaError('');
+    setMediaSuccess('');
+    
+    if (!mediaForm.title.trim()) {
+      setMediaError('Title is required');
+      return;
+    }
+    
     const fileInput = fileInputRef.current;
+    const file = fileInput?.files?.[0];
+    let finalUrl = mediaForm.url.trim();
 
-    if (finalUrl.startsWith('/uploads/')) {
-      // Already imported via Drive — use as-is
-    } else if (fileInput?.files?.[0] && !finalUrl.startsWith('data:')) {
-      const file = fileInput.files[0];
-      const uploadFile = mediaForm.type === 'image' ? await compressImage(file) : file;
-      const fd = new FormData();
-      fd.append('file', uploadFile, file.name);
-      const res = await fetch('/api/upload', { method: 'POST', body: fd });
-      const data = await res.json();
-      if (data.url) finalUrl = data.url;
-    } else if (finalUrl.startsWith('data:')) {
-      finalUrl = mediaForm.url;
+    if (!file && !finalUrl) {
+      setMediaError('Please select a file to upload or enter a URL');
+      return;
     }
 
-    await addMediaItem({ type: mediaForm.type, title: mediaForm.title, description: mediaForm.description, url: finalUrl });
-    const items = await getMediaItems();
-    setMedia(items);
-    setMediaForm({ type: 'image', title: '', description: '', url: '' });
-    setPreviewUrl('');
-    if (fileInputRef.current) fileInputRef.current.value = '';
-    setMediaSuccess('Media added successfully!');
-    setMediaLoading(false);
-    setTimeout(() => setMediaSuccess(''), 3000);
+    setMediaLoading(true);
+
+    try {
+      if (file) {
+        // Format check
+        if (mediaForm.type === 'image' && !file.type.startsWith('image/')) {
+          throw new Error('Please upload an image file (PNG, JPG, WEBP, etc.)');
+        }
+        if (mediaForm.type === 'video' && !file.type.startsWith('video/')) {
+          throw new Error('Please upload a video file (MP4, WEBM, etc.)');
+        }
+
+        const uploadFile = mediaForm.type === 'image' ? await compressImage(file) : file;
+        const fd = new FormData();
+        fd.append('file', uploadFile, file.name);
+        
+        const res = await fetch('/api/upload', { method: 'POST', body: fd });
+        if (!res.ok) {
+          throw new Error('Upload failed. Please try again.');
+        }
+        const data = await res.json();
+        if (!data.url) {
+          throw new Error(data.error || 'Server did not return file URL');
+        }
+        finalUrl = data.url;
+      }
+
+      // Check duplicates
+      if (media.some(m => m.title.toLowerCase() === mediaForm.title.trim().toLowerCase() || (finalUrl && m.url === finalUrl))) {
+        throw new Error('A media item with this title or URL already exists');
+      }
+
+      const added = await addMediaItem({ type: mediaForm.type, title: mediaForm.title.trim(), description: mediaForm.description.trim(), url: finalUrl });
+      if (!added) {
+        throw new Error('Failed to save media to database');
+      }
+
+      const items = await getMediaItems();
+      setMedia(items);
+      setMediaForm({ type: 'image', title: '', description: '', url: '' });
+      setPreviewUrl('');
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      setMediaSuccess('Media added successfully!');
+      setTimeout(() => setMediaSuccess(''), 4000);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'An error occurred';
+      setMediaError(msg);
+      setTimeout(() => setMediaError(''), 5000);
+    } finally {
+      setMediaLoading(false);
+    }
   }
 
   async function handleDeleteMedia(id: string) {
-    await deleteMediaItem(id);
-    const items = await getMediaItems();
-    setMedia(items);
-    setDeleteConfirm(null);
+    try {
+      setMediaError('');
+      const success = await deleteMediaItem(id);
+      if (!success) {
+        throw new Error('Failed to delete media from database');
+      }
+      const items = await getMediaItems();
+      setMedia(items);
+      setMediaSuccess('Media deleted successfully!');
+      setTimeout(() => setMediaSuccess(''), 4000);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'An error occurred while deleting';
+      setMediaError(msg);
+      setTimeout(() => setMediaError(''), 5000);
+    } finally {
+      setDeleteConfirm(null);
+    }
   }
 
   // Announcement handlers
   async function handleAddAnnouncement(e: React.FormEvent) {
     e.preventDefault();
-    if (!annForm.title.trim() || !annForm.content.trim()) return;
+    setAnnError('');
+    setAnnSuccess('');
+
+    if (!annForm.title.trim() || !annForm.content.trim()) {
+      setAnnError('Title and content are required');
+      return;
+    }
+
     setAnnLoading(true);
-    await addAnnouncement({
-      title: annForm.title,
-      content: annForm.content,
-      category: annForm.category,
-      date: annForm.date || new Date().toISOString().split('T')[0],
-    });
-    const items = await getAnnouncements();
-    setAnnouncements(items);
-    setAnnForm({ title: '', content: '', category: 'general', date: '' });
-    setAnnSuccess('Announcement published!');
-    setAnnLoading(false);
-    setTimeout(() => setAnnSuccess(''), 3000);
+
+    try {
+      // Check duplicate announcements
+      if (announcements.some(a => a.title.toLowerCase() === annForm.title.trim().toLowerCase())) {
+        throw new Error('An announcement with this title already exists');
+      }
+
+      const added = await addAnnouncement({
+        title: annForm.title.trim(),
+        content: annForm.content.trim(),
+        category: annForm.category,
+        date: annForm.date || new Date().toISOString().split('T')[0],
+      });
+      if (!added) {
+        throw new Error('Failed to save announcement to database');
+      }
+
+      const items = await getAnnouncements();
+      setAnnouncements(items);
+      setAnnForm({ title: '', content: '', category: 'general', date: '' });
+      setAnnSuccess('Announcement published successfully!');
+      setTimeout(() => setAnnSuccess(''), 4000);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Failed to add announcement';
+      setAnnError(msg);
+      setTimeout(() => setAnnError(''), 5000);
+    } finally {
+      setAnnLoading(false);
+    }
   }
 
   async function handleDeleteAnnouncement(id: string) {
-    await deleteAnnouncement(id);
-    const items = await getAnnouncements();
-    setAnnouncements(items);
-    setDeleteConfirm(null);
+    try {
+      setAnnError('');
+      const success = await deleteAnnouncement(id);
+      if (!success) {
+        throw new Error('Failed to delete announcement from database');
+      }
+      const items = await getAnnouncements();
+      setAnnouncements(items);
+      setAnnSuccess('Announcement deleted successfully!');
+      setTimeout(() => setAnnSuccess(''), 4000);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'An error occurred while deleting';
+      setAnnError(msg);
+      setTimeout(() => setAnnError(''), 5000);
+    } finally {
+      setDeleteConfirm(null);
+    }
   }
 
   function handleEditAnnouncement(ann: Announcement) {
+    setAnnError('');
+    setAnnSuccess('');
     setEditingAnn(ann);
     setEditForm({
       title: ann.title,
@@ -168,17 +261,46 @@ export default function AdminPage() {
 
   async function handleSaveEdit(e: React.FormEvent) {
     e.preventDefault();
+    setAnnError('');
+    setAnnSuccess('');
+    
     const ann = editingAnn;
-    if (!ann || !editForm.title.trim() || !editForm.content.trim()) return;
+    if (!ann || !editForm.title.trim() || !editForm.content.trim()) {
+      setAnnError('Title and content are required');
+      return;
+    }
+
     setAnnLoading(true);
-    await updateAnnouncement(ann.id, editForm);
-    const items = await getAnnouncements();
-    setAnnouncements(items);
-    setEditingAnn(null);
-    setEditForm({ title: '', content: '', category: 'general', date: '' });
-    setAnnSuccess('Announcement updated!');
-    setAnnLoading(false);
-    setTimeout(() => setAnnSuccess(''), 3000);
+
+    try {
+      // Check duplicate edit titles (excluding itself)
+      if (announcements.some(a => a.id !== ann.id && a.title.toLowerCase() === editForm.title.trim().toLowerCase())) {
+        throw new Error('Another announcement with this title already exists');
+      }
+
+      const updated = await updateAnnouncement(ann.id, {
+        title: editForm.title.trim(),
+        content: editForm.content.trim(),
+        category: editForm.category,
+        date: editForm.date,
+      });
+      if (!updated) {
+        throw new Error('Failed to update announcement in database');
+      }
+
+      const items = await getAnnouncements();
+      setAnnouncements(items);
+      setEditingAnn(null);
+      setEditForm({ title: '', content: '', category: 'general', date: '' });
+      setAnnSuccess('Announcement updated successfully!');
+      setTimeout(() => setAnnSuccess(''), 4000);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Failed to update announcement';
+      setAnnError(msg);
+      setTimeout(() => setAnnError(''), 5000);
+    } finally {
+      setAnnLoading(false);
+    }
   }
 
   const filteredMedia = mediaFilter === 'all' ? media : media.filter(m => m.type === mediaFilter);
@@ -380,6 +502,7 @@ export default function AdminPage() {
                 </div>
 
                 {mediaSuccess && <div className={styles.successMsg}>{mediaSuccess}</div>}
+                {mediaError && <div className={styles.errorMsg} style={{ color: '#DC2626', margin: '8px 0', fontSize: '0.9rem', fontWeight: '500' }}>⚠️ {mediaError}</div>}
 
                 <button
                   type="submit"
@@ -514,6 +637,7 @@ export default function AdminPage() {
                 </div>
 
                 {annSuccess && <div className={styles.successMsg}>{annSuccess}</div>}
+                {annError && <div className={styles.errorMsg} style={{ color: '#DC2626', margin: '8px 0', fontSize: '0.9rem', fontWeight: '500' }}>⚠️ {annError}</div>}
 
                 <button
                   type="submit"
@@ -639,6 +763,7 @@ export default function AdminPage() {
                   />
                 </div>
               </div>
+              {annError && <div className={styles.errorMsg} style={{ color: '#DC2626', margin: '8px 0', fontSize: '0.9rem', fontWeight: '500', textAlign: 'center' }}>⚠️ {annError}</div>}
               <div className={styles.modalBtns}>
                 <button
                   type="button"

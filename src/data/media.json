@@ -1,13 +1,5 @@
 [
   {
-    "id": "1",
-    "type": "image",
-    "url": "",
-    "title": "Annual Sports Day",
-    "description": "Students participating in sports day activities",
-    "createdAt": "2024-01-15T10:00:00Z"
-  },
-  {
     "id": "2",
     "type": "image",
     "url": "",
