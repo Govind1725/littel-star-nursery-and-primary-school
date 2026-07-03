@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getMediaItems, getAnnouncements, type MediaItem, type Announcement } from '@/lib/store';
@@ -130,17 +130,22 @@ export default function HomePage() {
     setSubmitted(true);
   };
 
+  const fetchHomeAnnouncements = useCallback(async () => {
+    const items = await getAnnouncements();
+    setHomeAnnouncements(items);
+  }, []);
+
   useEffect(() => {
     setMounted(true);
     setMedia(getMediaItems().filter((m) => m.type === 'image'));
-    setHomeAnnouncements(getAnnouncements());
+    fetchHomeAnnouncements();
 
     const handleFocus = () => {
-      setHomeAnnouncements(getAnnouncements());
+      fetchHomeAnnouncements();
     };
     window.addEventListener('focus', handleFocus);
     return () => window.removeEventListener('focus', handleFocus);
-  }, []);
+  }, [fetchHomeAnnouncements]);
 
   useEffect(() => {
     const el = statsRef.current;

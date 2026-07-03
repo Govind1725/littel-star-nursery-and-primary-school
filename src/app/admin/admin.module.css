@@ -547,7 +547,28 @@
   color: var(--gray-500);
 }
 
-/* Delete Button */
+/* Edit & Delete Buttons */
+.editBtn {
+  width: 38px;
+  height: 38px;
+  background: #DBEAFE;
+  border: 2px solid #BFDBFE;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-bounce);
+  flex-shrink: 0;
+  color: #1D4ED8;
+}
+
+.editBtn:hover {
+  background: #93C5FD;
+  transform: scale(1.1);
+}
+
 .deleteBtn {
   width: 38px;
   height: 38px;
@@ -630,8 +651,13 @@
   line-height: 1.6;
 }
 
+.annItem .editBtn,
 .annItem .deleteBtn {
   margin: 16px 16px 0 0;
+}
+
+.annItem .editBtn {
+  margin-right: 4px;
 }
 
 /* Empty State */

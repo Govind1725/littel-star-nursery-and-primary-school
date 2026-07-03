@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getAnnouncements, saveAnnouncements, deleteAnnouncement, type Announcement } from '@/lib/store';
+import { getAnnouncements, type Announcement } from '@/lib/store';
 import styles from './announcements.module.css';
 
 const categoryConfig = {
@@ -77,31 +77,7 @@ export default function AnnouncementsPage() {
 
   useEffect(() => {
     setMounted(true);
-    const now = Date.now();
-    const THREE_DAYS = 3 * 24 * 60 * 60 * 1000;
-
-    let items = getAnnouncements();
-
-    // Filter out expired urgent announcements
-    const active = items.filter((a) => {
-      if (a.category !== 'urgent') return true;
-      const age = now - new Date(a.createdAt).getTime();
-      return age < THREE_DAYS;
-    });
-
-    // If some were removed, persist the cleaned list
-    if (active.length < items.length) {
-      saveAnnouncements(active);
-    }
-
-    // Sort: urgent (by createdAt desc) first, then normal (by createdAt desc)
-    const sorted = [...active].sort((a, b) => {
-      if (a.category === 'urgent' && b.category !== 'urgent') return -1;
-      if (a.category !== 'urgent' && b.category === 'urgent') return 1;
-      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-    });
-
-    setAnnouncements(sorted);
+    getAnnouncements().then(setAnnouncements);
   }, []);
 
   const filtered = filter === 'all'

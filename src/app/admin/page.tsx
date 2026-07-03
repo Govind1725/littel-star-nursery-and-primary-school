@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import {
   getMediaItems, addMediaItem, deleteMediaItem,
-  getAnnouncements, addAnnouncement, deleteAnnouncement,
+  getAnnouncements, addAnnouncement, updateAnnouncement, deleteAnnouncement,
   type MediaItem, type Announcement,
 } from '@/lib/store';
 import styles from './admin.module.css';
@@ -38,6 +38,9 @@ export default function AdminPage() {
 
   const [deleteConfirm, setDeleteConfirm] = useState<{ type: 'media' | 'ann'; id: string } | null>(null);
 
+  const [editingAnn, setEditingAnn] = useState<Announcement | null>(null);
+  const [editForm, setEditForm] = useState({ title: '', content: '', category: 'general' as Announcement['category'], date: '' });
+
   useEffect(() => {
     const saved = sessionStorage.getItem('lsn_admin_auth');
     if (saved === 'true') {
@@ -46,9 +49,10 @@ export default function AdminPage() {
     }
   }, []);
 
-  function loadData() {
+  async function loadData() {
     setMedia(getMediaItems());
-    setAnnouncements(getAnnouncements());
+    const items = await getAnnouncements();
+    setAnnouncements(items);
   }
 
   function handleLogin(e: React.FormEvent) {
@@ -129,24 +133,50 @@ export default function AdminPage() {
     e.preventDefault();
     if (!annForm.title.trim() || !annForm.content.trim()) return;
     setAnnLoading(true);
-    await new Promise(r => setTimeout(r, 600));
-    addAnnouncement({
+    await addAnnouncement({
       title: annForm.title,
       content: annForm.content,
       category: annForm.category,
       date: annForm.date || new Date().toISOString().split('T')[0],
     });
-    setAnnouncements(getAnnouncements());
+    const items = await getAnnouncements();
+    setAnnouncements(items);
     setAnnForm({ title: '', content: '', category: 'general', date: '' });
     setAnnSuccess('Announcement published!');
     setAnnLoading(false);
     setTimeout(() => setAnnSuccess(''), 3000);
   }
 
-  function handleDeleteAnnouncement(id: string) {
-    deleteAnnouncement(id);
-    setAnnouncements(getAnnouncements());
+  async function handleDeleteAnnouncement(id: string) {
+    await deleteAnnouncement(id);
+    const items = await getAnnouncements();
+    setAnnouncements(items);
     setDeleteConfirm(null);
+  }
+
+  function handleEditAnnouncement(ann: Announcement) {
+    setEditingAnn(ann);
+    setEditForm({
+      title: ann.title,
+      content: ann.content,
+      category: ann.category,
+      date: ann.date,
+    });
+  }
+
+  async function handleSaveEdit(e: React.FormEvent) {
+    e.preventDefault();
+    const ann = editingAnn;
+    if (!ann || !editForm.title.trim() || !editForm.content.trim()) return;
+    setAnnLoading(true);
+    await updateAnnouncement(ann.id, editForm);
+    const items = await getAnnouncements();
+    setAnnouncements(items);
+    setEditingAnn(null);
+    setEditForm({ title: '', content: '', category: 'general', date: '' });
+    setAnnSuccess('Announcement updated!');
+    setAnnLoading(false);
+    setTimeout(() => setAnnSuccess(''), 3000);
   }
 
   const filteredMedia = mediaFilter === 'all' ? media : media.filter(m => m.type === mediaFilter);
@@ -519,12 +549,20 @@ export default function AdminPage() {
                           <p className={styles.annItemContent}>{ann.content}</p>
                         </div>
                         <button
+                          className={styles.editBtn}
+                          onClick={() => handleEditAnnouncement(ann)}
+                          id={`admin-edit-ann-${ann.id}`}
+                          title="Edit"
+                        >
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        </button>
+                        <button
                           className={styles.deleteBtn}
                           onClick={() => setDeleteConfirm({ type: 'ann', id: ann.id })}
                           id={`admin-delete-ann-${ann.id}`}
                           title="Delete"
                         >
-                          
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                         </button>
                       </div>
                     );
@@ -540,6 +578,87 @@ export default function AdminPage() {
           <ReceiptGenerator />
         )}
       </div>
+
+      {/* Edit Announcement Modal */}
+      {editingAnn && (
+        <div className={styles.modal} onClick={() => setEditingAnn(null)}>
+          <div className={styles.modalBox} onClick={e => e.stopPropagation()}>
+            <div className={styles.modalIcon}></div>
+            <h3>Edit Announcement</h3>
+            <form onSubmit={handleSaveEdit} className={styles.annForm}>
+              <div className={styles.formGrid}>
+                <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                  <label htmlFor="edit-ann-title">Title *</label>
+                  <input
+                    id="edit-ann-title"
+                    type="text"
+                    placeholder="Announcement title"
+                    value={editForm.title}
+                    onChange={e => setEditForm(p => ({ ...p, title: e.target.value }))}
+                    className={styles.input}
+                    required
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label htmlFor="edit-ann-category">Category *</label>
+                  <select
+                    id="edit-ann-category"
+                    value={editForm.category}
+                    onChange={e => setEditForm(p => ({ ...p, category: e.target.value as Announcement['category'] }))}
+                    className={styles.input}
+                  >
+                    <option value="general">General</option>
+                    <option value="event">Event</option>
+                    <option value="holiday">Holiday</option>
+                    <option value="urgent">Urgent</option>
+                  </select>
+                </div>
+                <div className={styles.formGroup}>
+                  <label htmlFor="edit-ann-date">Date *</label>
+                  <input
+                    id="edit-ann-date"
+                    type="date"
+                    value={editForm.date}
+                    onChange={e => setEditForm(p => ({ ...p, date: e.target.value }))}
+                    className={styles.input}
+                    required
+                  />
+                </div>
+                <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                  <label htmlFor="edit-ann-content">Content *</label>
+                  <textarea
+                    id="edit-ann-content"
+                    placeholder="Write the announcement details..."
+                    value={editForm.content}
+                    onChange={e => setEditForm(p => ({ ...p, content: e.target.value }))}
+                    className={`${styles.input} ${styles.textarea}`}
+                    rows={4}
+                    required
+                  />
+                </div>
+              </div>
+              <div className={styles.modalBtns}>
+                <button
+                  type="button"
+                  className={styles.cancelBtn}
+                  onClick={() => setEditingAnn(null)}
+                  id="admin-edit-cancel-btn"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn-primary"
+                  disabled={annLoading}
+                  id="admin-edit-save-btn"
+                >
+                  {annLoading ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Delete Confirm Modal */}
       {deleteConfirm && (

@@ -1,6 +1,3 @@
-// Simple client-side data store using localStorage
-// In a real app, this would use a database
-
 export interface MediaItem {
   id: string;
   type: 'image' | 'video';
@@ -20,7 +17,6 @@ export interface Announcement {
 }
 
 const MEDIA_KEY = 'lsn_media';
-const ANNOUNCEMENTS_KEY = 'lsn_announcements';
 
 // ========== MEDIA ==========
 export function getMediaItems(): MediaItem[] {
@@ -66,72 +62,51 @@ function getDefaultMedia(): MediaItem[] {
   ];
 }
 
-// ========== ANNOUNCEMENTS ==========
-export function getAnnouncements(): Announcement[] {
-  if (typeof window === 'undefined') return [];
+// ========== ANNOUNCEMENTS (API-backed, centralized database) ==========
+
+export async function getAnnouncements(): Promise<Announcement[]> {
   try {
-    const data = localStorage.getItem(ANNOUNCEMENTS_KEY);
-    return data ? JSON.parse(data) : getDefaultAnnouncements();
+    const res = await fetch('/api/announcements', { cache: 'no-store' });
+    if (!res.ok) return [];
+    return res.json();
   } catch {
-    return getDefaultAnnouncements();
+    return [];
   }
 }
 
-export function saveAnnouncements(items: Announcement[]): void {
-  if (typeof window === 'undefined') return;
-  localStorage.setItem(ANNOUNCEMENTS_KEY, JSON.stringify(items));
+export async function addAnnouncement(ann: Omit<Announcement, 'id' | 'createdAt'>): Promise<Announcement | null> {
+  try {
+    const res = await fetch('/api/announcements', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(ann),
+    });
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    return null;
+  }
 }
 
-export function addAnnouncement(ann: Omit<Announcement, 'id' | 'createdAt'>): Announcement {
-  const newAnn: Announcement = {
-    ...ann,
-    id: Date.now().toString(),
-    createdAt: new Date().toISOString(),
-  };
-  const items = getAnnouncements();
-  items.unshift(newAnn);
-  saveAnnouncements(items);
-  return newAnn;
+export async function updateAnnouncement(id: string, ann: Partial<Announcement>): Promise<Announcement | null> {
+  try {
+    const res = await fetch(`/api/announcements/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(ann),
+    });
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    return null;
+  }
 }
 
-export function deleteAnnouncement(id: string): void {
-  const items = getAnnouncements().filter((item) => item.id !== id);
-  saveAnnouncements(items);
-}
-
-function getDefaultAnnouncements(): Announcement[] {
-  return [
-    {
-      id: '1',
-      title: 'Admissions Open for 2024–25',
-      content: 'We are pleased to announce that admissions for the academic year 2024–25 are now open! Visit our school office or contact us to secure your child\'s spot.',
-      category: 'general',
-      date: '2024-06-01',
-      createdAt: '2024-06-01T09:00:00Z',
-    },
-    {
-      id: '2',
-      title: 'Annual Sports Day – July 15, 2024',
-      content: 'Our Annual Sports Day will be held on July 15, 2024. All students are required to wear their sports uniforms. Parents are warmly invited to attend.',
-      category: 'event',
-      date: '2024-07-15',
-      createdAt: '2024-06-15T09:00:00Z',
-    },
-    {
-      id: '3',
-      title: 'School Holiday – Pongal',
-      content: 'The school will remain closed from January 13–17 for the Pongal festival. Classes will resume on January 18th.',
-      category: 'holiday',
-      date: '2024-01-13',
-      createdAt: '2024-01-05T09:00:00Z',
-    },
-    {
-      id: '4',
-      title: 'Fee Payment Reminder',
-      content: 'This is a reminder that the second-term school fees are due by August 31. Please pay at the school office or via bank transfer.',
-      category: 'urgent',
-      date: '2024-08-15',
-      createdAt: '2024-08-10T09:00:00Z',
-    },
-  ];
+export async function deleteAnnouncement(id: string): Promise<boolean> {
+  try {
+    const res = await fetch(`/api/announcements/${id}`, { method: 'DELETE' });
+    return res.ok;
+  } catch {
+    return false;
+  }
 }
