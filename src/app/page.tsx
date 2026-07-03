@@ -140,11 +140,19 @@ export default function HomePage() {
     setMedia(getMediaItems().filter((m) => m.type === 'image'));
     fetchHomeAnnouncements();
 
+    // Refetch when page gets focus
     const handleFocus = () => {
       fetchHomeAnnouncements();
     };
     window.addEventListener('focus', handleFocus);
-    return () => window.removeEventListener('focus', handleFocus);
+
+    // Auto-refresh poll every 10 seconds to sync different devices
+    const interval = setInterval(fetchHomeAnnouncements, 10000);
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+      clearInterval(interval);
+    };
   }, [fetchHomeAnnouncements]);
 
   useEffect(() => {

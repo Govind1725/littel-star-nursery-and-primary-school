@@ -75,9 +75,28 @@ export default function AnnouncementsPage() {
   const [filter, setFilter] = useState<string>('all');
   const [mounted, setMounted] = useState(false);
 
+  const fetchAnnouncements = async () => {
+    const data = await getAnnouncements();
+    setAnnouncements(data);
+  };
+
   useEffect(() => {
     setMounted(true);
-    getAnnouncements().then(setAnnouncements);
+    fetchAnnouncements();
+
+    // Refetch when browser window is focused
+    const handleFocus = () => {
+      fetchAnnouncements();
+    };
+    window.addEventListener('focus', handleFocus);
+
+    // Auto-refresh poll every 10 seconds to sync different devices
+    const interval = setInterval(fetchAnnouncements, 10000);
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+      clearInterval(interval);
+    };
   }, []);
 
   const filtered = filter === 'all'

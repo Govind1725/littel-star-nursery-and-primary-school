@@ -1,43 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-
-export interface Announcement {
-  id: string;
-  title: string;
-  content: string;
-  category: 'general' | 'event' | 'holiday' | 'urgent';
-  date: string;
-  createdAt: string;
-}
-
-const DATA_FILE = path.join(process.cwd(), 'src', 'data', 'announcements.json');
-
-function ensureDataDir(): void {
-  const dir = path.dirname(DATA_FILE);
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
-}
-
-function readData(): Announcement[] {
-  try {
-    ensureDataDir();
-    if (!fs.existsSync(DATA_FILE)) {
-      fs.writeFileSync(DATA_FILE, JSON.stringify([], null, 2));
-      return [];
-    }
-    const data = fs.readFileSync(DATA_FILE, 'utf-8');
-    return JSON.parse(data);
-  } catch {
-    return [];
-  }
-}
-
-function writeData(items: Announcement[]): void {
-  ensureDataDir();
-  fs.writeFileSync(DATA_FILE, JSON.stringify(items, null, 2));
-}
+import { readAnnouncements, writeAnnouncements, type Announcement } from '@/lib/db';
 
 const noCacheHeaders = {
   'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
@@ -47,7 +9,7 @@ const noCacheHeaders = {
 };
 
 export async function GET() {
-  let items = readData();
+  let items = await readAnnouncements();
   const now = Date.now();
   const THREE_DAYS = 3 * 24 * 60 * 60 * 1000;
 
@@ -58,7 +20,7 @@ export async function GET() {
   });
 
   if (active.length < items.length) {
-    writeData(active);
+    await writeAnnouncements(active);
   }
 
   const sorted = [...active].sort((a, b) => {
@@ -76,7 +38,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Title and content are required' }, { status: 400, headers: noCacheHeaders });
   }
 
-  const items = readData();
+  const items = await readAnnouncements();
   const newItem: Announcement = {
     id: Date.now().toString(),
     title: body.title.trim(),
@@ -86,7 +48,7 @@ export async function POST(request: NextRequest) {
     createdAt: new Date().toISOString(),
   };
   items.unshift(newItem);
-  writeData(items);
+  await writeAnnouncements(items);
 
   return NextResponse.json(newItem, { status: 201, headers: noCacheHeaders });
 }
