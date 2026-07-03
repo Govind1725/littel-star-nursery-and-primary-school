@@ -279,7 +279,7 @@ h1, h2, h3, h4, h5 {
 }
 
 .page-hero {
-  background: linear-gradient(135deg, var(--violet-dark) 0%, var(--violet) 50%, var(--violet-mid) 100%);
+  background: radial-gradient(ellipse at 50% 40%, #3e127a 0%, #15053a 100%);
   padding: 120px 0 80px;
   text-align: center;
   position: relative;
@@ -290,8 +290,8 @@ h1, h2, h3, h4, h5 {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: radial-gradient(circle at 30% 50%, rgba(255,215,0,0.15) 0%, transparent 60%),
-              radial-gradient(circle at 70% 30%, rgba(255,255,255,0.08) 0%, transparent 50%);
+  background: radial-gradient(circle at 20% 30%, rgba(255,215,0,0.08) 0%, transparent 50%),
+              radial-gradient(circle at 80% 70%, rgba(124,58,237,0.15) 0%, transparent 60%);
   pointer-events: none;
 }
 

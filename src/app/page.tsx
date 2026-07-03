@@ -3,21 +3,23 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { getMediaItems, MediaItem } from '@/lib/store';
+import { getMediaItems, getAnnouncements, type MediaItem, type Announcement } from '@/lib/store';
 import styles from './page.module.css';
+import { MapPin, Phone, Mail, Clock, Baby, Sprout, Backpack, BookOpen, BrainCircuit, MessageSquare, Users, Heart, Activity, Palette, Sparkles, User, BriefcaseBusiness, PartyPopper, Megaphone, Trophy, Star, Bell, ImageIcon, Check, Video, Smile, Handshake, Dumbbell, Microscope, Camera, Theater, FileAudio, Leaf } from 'lucide-react';
 
 const contactInfo = [
-  { icon: '📍', title: 'Address', lines: ['Little Star Nursery & Primary School', 'Chennai, Tamil Nadu, India'] },
-  { icon: '📞', title: 'Phone', lines: ['+91 98765 43210', '+91 044-2345-6789'] },
-  { icon: '✉️', title: 'Email', lines: ['info@littlestar.edu.in', 'admissions@littlestar.edu.in'] },
-  { icon: '🕐', title: 'Office Hours', lines: ['Mon–Fri: 8:00 AM – 5:00 PM', 'Saturday: 9:00 AM – 1:00 PM'] },
+  { icon: MapPin, title: 'Address', lines: ['No.2 Anna main road, Jayalakshmi Nagar', 'Nerkundram, Chennai-107'] },
+  { icon: Phone, title: 'Phone', lines: ['9941294084'] },
+  { icon: Mail, title: 'Email', lines: ['littlestarnpschoolnerkundram@gmail.com'] },
+  { icon: Clock, title: 'Office Hours', lines: ['Mon–Fri: 9:00 AM – 5:00 PM', 'Saturday: 9:00 AM – 3:00 PM', 'Sunday & Govt. holidays: Holiday'] },
 ];
 
 const programs = [
   {
     img: '/images/program_toddler.png',
     age: '2.5 – 3.5 Years',
-    badge: '🍼 Toddler',
+    badge: 'Toddler',
+    icon: Baby,
     title: 'Toddler Program',
     desc: 'A gentle introduction to group learning through sensory play, music, and movement in a nurturing environment.',
     color: 'linear-gradient(135deg,#7C3AED,#4C1D95)',
@@ -25,7 +27,8 @@ const programs = [
   {
     img: '/images/program_preschool.png',
     age: '3.5 – 4.5 Years',
-    badge: '🌱 Nursery',
+    badge: 'Nursery',
+    icon: Sprout,
     title: 'Nursery (LKG)',
     desc: 'Building foundations in language, numbers, art, and social skills through joyful activity-based learning.',
     color: 'linear-gradient(135deg,#6D28D9,#7C3AED)',
@@ -33,7 +36,8 @@ const programs = [
   {
     img: '/images/program_prek.png',
     age: '4.5 – 5.5 Years',
-    badge: '🎒 Pre-KG',
+    badge: 'Pre-KG',
+    icon: Backpack,
     title: 'Pre-KG / UKG',
     desc: 'Preparing confident learners for primary school with literacy, numeracy, and critical thinking skills.',
     color: 'linear-gradient(135deg,#4C1D95,#6D28D9)',
@@ -41,7 +45,8 @@ const programs = [
   {
     img: '/images/program_afterschool.png',
     age: '5 – 12 Years',
-    badge: '📚 Primary',
+    badge: 'Primary',
+    icon: BookOpen,
     title: 'Primary & After School',
     desc: 'A structured curriculum blending academics, arts, sports, and values for holistic growth.',
     color: 'linear-gradient(135deg,#2E1065,#4C1D95)',
@@ -64,10 +69,10 @@ const lifeAtSchool = [
 ];
 
 const stats = [
-  { value: 500, suffix: '+', label: 'Happy Students' },
-  { value: 25, suffix: '+', label: 'Expert Teachers' },
-  { value: 25, suffix: '+', label: 'Years of Excellence' },
-  { value: 98, suffix: '%', label: 'Exceptional Parents' },
+  { value: 500, suffix: '+', label: 'Happy Students', icon: Users },
+  { value: 25, suffix: '+', label: 'Expert Teachers', icon: User },
+  { value: 25, suffix: '+', label: '25+ Years of Excellence', icon: Trophy },
+  { value: 98, suffix: '%', label: 'Exceptional Parents', icon: Heart },
 ];
 
 const testimonials = [
@@ -75,31 +80,24 @@ const testimonials = [
     name: 'Priya Sharma',
     role: 'Parent of Aarav, Grade 2',
     text: 'Little Star has been a wonderful journey for our son. The teachers are so caring and the environment is full of joy!',
-    emoji: '👩',
+    emoji: User,
   },
   {
     name: 'Rajesh Kumar',
     role: 'Parent of Ananya, LKG',
     text: 'My daughter looks forward to school every single day. The activities are amazing and she has grown so much!',
-    emoji: '👨',
+    emoji: User,
   },
   {
     name: 'Meena Patel',
     role: 'Parent of Rohan, Nursery',
     text: 'The staff is incredibly supportive. Little Star truly feels like a second home for the children.',
-    emoji: '👩‍💼',
+    emoji: BriefcaseBusiness,
   },
 ];
 
-const announcements = [
-  { date: 'June 20, 2026', tag: '🎉 Event', title: 'Annual Sports Day – July 15th', desc: 'Join us for a day of fun, competition, and celebration! All parents are invited.' },
-  { date: 'June 15, 2026', tag: '📢 Notice', title: 'Admissions Open for 2026–27', desc: 'Seats are filling fast! Apply now for Nursery, LKG, UKG & Primary classes.' },
-  { date: 'June 10, 2026', tag: '🏆 Achievement', title: 'State Science Fair Winners', desc: 'Our Grade 4 students won gold at the Tamil Nadu State Science Exhibition!' },
-];
 
-
-
-const galleryEmojis = ['🎨', '📸', '🌸', '🎭', '🏃', '🎵', '🔬', '🌿', '🎉', '🏆', '📚', '🤝'];
+const galleryIcons = [Palette, Camera, Sparkles, Theater, Activity, FileAudio, Microscope, Leaf, PartyPopper, Trophy, BookOpen, Handshake];
 const placeholderColors = [
   'linear-gradient(135deg, #7C3AED, #FFD700)',
   'linear-gradient(135deg, #4C1D95, #FFC107)',
@@ -118,6 +116,7 @@ export default function HomePage() {
   const [form, setForm] = useState({ name: '', email: '', phone: '', subject: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [homeAnnouncements, setHomeAnnouncements] = useState<Announcement[]>([]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -134,6 +133,13 @@ export default function HomePage() {
   useEffect(() => {
     setMounted(true);
     setMedia(getMediaItems().filter((m) => m.type === 'image'));
+    setHomeAnnouncements(getAnnouncements());
+
+    const handleFocus = () => {
+      setHomeAnnouncements(getAnnouncements());
+    };
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
   }, []);
 
   useEffect(() => {
@@ -248,14 +254,8 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className={styles.heroStats}>
-            {stats.slice(2).map((s, i) => (
-              <div key={i} className={styles.heroStat}>
-                <div className={styles.heroStatNum}>{s.value}{s.suffix}</div>
-                <div className={styles.heroStatLabel}>{s.label}</div>
-              </div>
-            ))}
-          </div>
+          <p className={styles.heroYears}>25+ Years of Excellence</p>
+
         </div>
 
         <div className={styles.heroCurve}>
@@ -270,7 +270,7 @@ export default function HomePage() {
         <div className="container">
           <div className={styles.announcementsHeader}>
             <div>
-              <span className="badge">📢 Latest Updates</span>
+              <span className="badge"><Bell size={16} style={{ display: 'inline', marginRight: '6px' }} /> Latest Updates</span>
               <h2 className="section-title" style={{ marginBottom: 0 }}>School Announcements</h2>
             </div>
             <Link href="/announcements" className="btn-outline" id="home-announcements-btn">
@@ -278,66 +278,89 @@ export default function HomePage() {
             </Link>
           </div>
           <div className={styles.announcementsGrid}>
-            {announcements.map((a, i) => (
-              <div key={i} className={styles.announcementCard} style={{ animationDelay: `${i * 0.1}s` }}>
-                <div className={styles.announcementMeta}>
-                  <span className={styles.announcementTag}>{a.tag}</span>
-                  <span className={styles.announcementDate}>{a.date}</span>
+            {homeAnnouncements.slice(0, 3).map((a, i) => {
+              const tagMap: Record<string, { label: string; icon: React.ComponentType<{ size?: number; style?: React.CSSProperties }> }> = {
+                general: { label: 'Notice', icon: Megaphone },
+                event: { label: 'Event', icon: PartyPopper },
+                holiday: { label: 'Holiday', icon: Star },
+                urgent: { label: 'Urgent', icon: Bell },
+              };
+              const tag = tagMap[a.category] || tagMap.general;
+              const TagIcon = tag.icon;
+              return (
+                <div key={a.id} className={styles.announcementCard} style={{ animationDelay: `${i * 0.1}s` }}>
+                  <div className={styles.announcementMeta}>
+                    <span className={styles.announcementTag}><TagIcon size={14} style={{display: 'inline', marginRight: '4px'}} />{tag.label}</span>
+                    <span className={styles.announcementDate}>{a.date}</span>
+                  </div>
+                  <h3 className={styles.announcementTitle}>{a.title}</h3>
+                  <p className={styles.announcementDesc}>{a.content}</p>
+                  <Link href="/announcements" className={styles.announcementLink} id={`announcement-${i}-btn`}>
+                    Read More →
+                  </Link>
                 </div>
-                <h3 className={styles.announcementTitle}>{a.title}</h3>
-                <p className={styles.announcementDesc}>{a.desc}</p>
-                <Link href="/announcements" className={styles.announcementLink} id={`announcement-${i}-btn`}>
-                  Read More →
-                </Link>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* ===== WELCOME ===== */}
-      <section className={`section-padding ${styles.welcome}`}>
+      <section className={`section-padding ${styles.welcomeSection}`}>
         <div className="container">
           <div className={styles.welcomeGrid}>
-            <div className={styles.welcomeImg}>
-              <div className={styles.imgCard} style={{ position: 'relative' }}>
-                <Image
-                  src="/images/campus_building.png"
-                  alt="Little Star Campus"
-                  fill
-                  style={{ objectFit: 'cover', borderRadius: '20px' }}
-                  sizes="(max-width: 768px) 100vw, 45vw"
-                  priority
-                />
+            <div className={styles.welcomeImgWrap}>
+              <div className={styles.welcomeBadgeTop}>
+                <Heart size={16} fill="#F97316" color="#F97316" /> Loved by 500+ families!
               </div>
-              <div className={styles.imgBadge}>🌟 Est. 2010</div>
-              <div className={styles.imgBubble}>
-                <span>💛</span>
-                <span>Loved by 500+ families!</span>
+              <Image 
+                src="/images/campus_building.png" 
+                alt="Welcome to Little Star" 
+                width={600} 
+                height={450} 
+                className={styles.welcomeImg}
+              />
+              <div className={styles.welcomeBadgeBottom}>
+                <Sparkles size={16} fill="#EAB308" color="#EAB308" /> Est. 2010
               </div>
             </div>
-            <div className={styles.welcomeText}>
-              <span className="badge">🌟 Welcome to Little Star</span>
-              <h2 className="section-title">A Day at Little Star</h2>
-              <p className={styles.welcomePara}>
-                At Little Star Nursery &amp; Primary School, we believe that the early years are the
-                most critical in shaping a child&apos;s future. Our dedicated team of educators creates
-                a safe, stimulating, and joyful environment.
+            
+            <div>
+              <span className="badge" style={{ background: '#FEF08A', color: '#5A2C99', borderColor: '#FEF08A', fontWeight: 800 }}>
+                <Sparkles size={16} fill="#EAB308" color="#EAB308" style={{display: 'inline', marginRight: '6px'}} /> 
+                WELCOME TO LITTLE STAR
+              </span>
+              <h2 className={styles.welcomeTitle}>A Day at Little Star</h2>
+              
+              <p className={styles.welcomeText}>
+                At Little Star Nursery & Primary School, we believe that the early years are the most critical in shaping a child&apos;s future. Our dedicated team of educators creates a safe, stimulating, and joyful environment.
               </p>
-              <p className={styles.welcomePara}>
-                We combine play-based learning with structured academics to nurture creativity,
-                curiosity, and confidence in every child.
+              
+              <p className={styles.welcomeText}>
+                We combine play-based learning with structured academics to nurture creativity, curiosity, and confidence in every child.
               </p>
-              <div className={styles.welcomeChecks}>
-                {['Qualified & caring teachers', 'Safe & secure campus', 'Activity-based learning', 'Regular parent updates'].map((item) => (
-                  <div key={item} className={styles.checkItem}>
-                    <span className={styles.checkIcon}>✅</span>
-                    <span>{item}</span>
-                  </div>
-                ))}
+              
+              <div className={styles.welcomeFeatures}>
+                <div className={styles.welcomeFeature}>
+                  <div className={styles.welcomeFeatureIcon}><Check size={14} strokeWidth={3} /></div>
+                  Qualified & caring teachers
+                </div>
+                <div className={styles.welcomeFeature}>
+                  <div className={styles.welcomeFeatureIcon}><Check size={14} strokeWidth={3} /></div>
+                  Safe & secure campus
+                </div>
+                <div className={styles.welcomeFeature}>
+                  <div className={styles.welcomeFeatureIcon}><Check size={14} strokeWidth={3} /></div>
+                  Activity-based learning
+                </div>
+                <div className={styles.welcomeFeature}>
+                  <div className={styles.welcomeFeatureIcon}><Check size={14} strokeWidth={3} /></div>
+                  Regular parent updates
+                </div>
               </div>
-              <Link href="/about" className="btn-outline" id="welcome-about-btn" style={{ marginTop: '32px', display: 'inline-flex' }}>
-                Discover More →
+              
+              <Link href="/about" className="btn-outline" style={{ display: 'inline-flex', padding: '12px 32px' }}>
+                Discover More &rarr;
               </Link>
             </div>
           </div>
@@ -348,7 +371,7 @@ export default function HomePage() {
       <section className={`section-padding ${styles.programsSection}`}>
         <div className="container">
           <div className="text-center">
-            <span className="badge">🎓 Our Programs</span>
+            <span className="badge"><BookOpen size={16} style={{display: 'inline', marginRight: '4px'}} /> Our Programs</span>
             <h2 className="section-title">Programs for Every Stage</h2>
             <p className="section-subtitle">
               Age-appropriate programs designed to nurture your child&apos;s unique potential at every developmental stage.
@@ -366,7 +389,7 @@ export default function HomePage() {
                     <div className={styles.stageAgeBubble}>{p.age}</div>
                   </div>
                   <div className={styles.stageContent}>
-                    <span className={styles.stageEmoji}>{p.badge}</span>
+                    <span className={styles.stageEmoji}><p.icon size={24} style={{display: 'inline', marginRight: '8px'}} />{p.badge}</span>
                     <h3 className={styles.stageTitle}>{p.title}</h3>
                     <p className={styles.stageDesc}>{p.desc}</p>
                     <span className={styles.stageArrow}>
@@ -387,7 +410,7 @@ export default function HomePage() {
           <div className={styles.statsGrid}>
             {stats.map((s, i) => (
               <div key={i} className={styles.statItem}>
-                <div className={styles.statNum}>{counts[i]}{s.suffix}</div>
+                <div className={styles.statIcon}><s.icon size={28} strokeWidth={1.5} /></div>
                 <div className={styles.statLabel}>{s.label}</div>
               </div>
             ))}
@@ -399,7 +422,7 @@ export default function HomePage() {
       <section className={`section-padding ${styles.whySection}`}>
         <div className="container">
           <div className="text-center">
-            <span className="badge">🎯 Why Little Star</span>
+            <span className="badge"><Sparkles size={16} style={{display: 'inline', marginRight: '4px'}} /> Why Little Star</span>
             <h2 className="section-title">A Holistic Approach to Learning</h2>
             <p className="section-subtitle">
               Our curriculum covers all dimensions of a child&apos;s growth — cognitive, social, physical, creative, and emotional.
@@ -414,7 +437,7 @@ export default function HomePage() {
                     alt={w.title}
                     width={80}
                     height={80}
-                    style={{ objectFit: 'contain', width: '80px', height: '80px' }}
+                    className={styles.whyImg}
                   />
                 </div>
                 <h3 className={styles.whyTitle}>{w.title}</h3>
@@ -429,7 +452,7 @@ export default function HomePage() {
       <section className={`section-padding ${styles.lifeSection}`}>
         <div className="container">
           <div className="text-center">
-            <span className="badge">🏫 Campus Life</span>
+            <span className="badge"><MapPin size={16} style={{display: 'inline', marginRight: '4px'}} /> Campus Life</span>
             <h2 className="section-title">Life at Little Star</h2>
             <p className="section-subtitle">
               Every corner of our campus is designed to inspire curiosity, creativity, and joy.
@@ -475,14 +498,24 @@ export default function HomePage() {
               </div>
             </div>
             <div className={styles.curriculumText}>
-              <span className="badge">📖 Our Curriculum</span>
+              <span className="badge"><BookOpen size={16} style={{display: 'inline', marginRight: '4px'}} /> Our Curriculum</span>
               <h2 className="section-title">Seven Petal Learning Framework</h2>
               <p className={styles.curriculumPara}>
                 Our proprietary curriculum is built on seven pillars of development — cognitive, language, social, emotional, physical, creative, and life skills — ensuring every child grows into a well-rounded individual.
               </p>
               <div className={styles.curriculumPillars}>
-                {['🧠 Cognitive', '💬 Language', '🤝 Social', '❤️ Emotional', '🏃 Physical', '🎨 Creative', '🌟 Life Skills'].map((p) => (
-                  <div key={p} className={styles.pillarChip}>{p}</div>
+                {[
+                  { label: 'Cognitive', icon: BrainCircuit },
+                  { label: 'Language', icon: MessageSquare },
+                  { label: 'Social', icon: Users },
+                  { label: 'Emotional', icon: Heart },
+                  { label: 'Physical', icon: Activity },
+                  { label: 'Creative', icon: Palette },
+                  { label: 'Life Skills', icon: Sparkles }
+                ].map((p, i) => (
+                  <div key={i} className={styles.pillarChip}>
+                    <p.icon size={16} style={{marginRight: '6px', display: 'inline'}} /> {p.label}
+                  </div>
                 ))}
               </div>
               <Link href="/child-care" className="btn-primary" id="curriculum-learn-btn" style={{ marginTop: '28px', display: 'inline-flex' }}>
@@ -497,7 +530,7 @@ export default function HomePage() {
       <section className={`section-padding ${styles.gallery}`}>
         <div className="container">
           <div className="text-center">
-            <span className="badge">📸 School Life</span>
+            <span className="badge"><Camera size={16} style={{display: 'inline', marginRight: '4px'}} /> School Life</span>
             <h2 className="section-title">Moments at Little Star</h2>
             <p className="section-subtitle">
               Capturing the joy, learning, and friendships that make every day special.
@@ -515,7 +548,7 @@ export default function HomePage() {
                           className={styles.marqueePlaceholder}
                           style={{ background: placeholderColors[i % placeholderColors.length] }}
                         >
-                          <span className={styles.marqueeEmoji}>{galleryEmojis[i % galleryEmojis.length]}</span>
+                          {(() => { const Icon = galleryIcons[i % galleryIcons.length]; return <Icon size={32} color="white" />; })()}
                         </div>
                       )}
                     </div>
@@ -526,7 +559,7 @@ export default function HomePage() {
                         className={styles.marqueePlaceholder}
                         style={{ background: placeholderColors[i % placeholderColors.length] }}
                       >
-                        <span className={styles.marqueeEmoji}>{galleryEmojis[i % galleryEmojis.length]}</span>
+                        {(() => { const Icon = galleryIcons[i % galleryIcons.length]; return <Icon size={32} color="white" />; })()}
                       </div>
                     </div>
                   ))}
@@ -540,11 +573,41 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ===== DAILY ROUTINE ===== */}
+      <section className={`section-padding ${styles.routineSection}`}>
+        <div className="container" style={{ textAlign: 'center', maxWidth: '1200px' }}>
+          <span className={styles.routineBadge}>DAILY ROUTINE</span>
+          <h2 className={styles.routineTitle}>A Day at Little Star</h2>
+          <p className={styles.routineSub}>A balanced schedule of learning, play, and rest.</p>
+
+          <div className={styles.routineTimeline}>
+            <div className={styles.timelineLine}></div>
+            <div className={styles.timelineCards}>
+              {[
+                { time: '8:45 AM', title: 'Entry', icon: '/images/routine_entry.png', bg: '#FFDFDF' },
+                { time: '9:00 AM', title: 'Prayer start', icon: '/images/routine_prayer.png', bg: '#FFF1B8' },
+                { time: '9:15 AM', title: 'Classes start', icon: '/images/routine_classes.png', bg: '#BDECB6' },
+                { time: '10:45 – 11:00 AM', title: 'Morning break', icon: '/images/routine_break.png', bg: '#C2DBFF' },
+                { time: '12:30 – 1:15 PM', title: 'Lunch break', icon: '/images/routine_lunch.png', bg: '#FFD1D1' },
+              ].map((item, i) => (
+                <div key={i} className={`${styles.routineCard} ${item.active ? styles.activeCard : ''}`}>
+                  <div className={styles.routineIconWrapper} style={{ backgroundColor: item.bg }}>
+                    <Image src={item.icon} alt={item.title} width={64} height={64} className={styles.routineIconImg} />
+                  </div>
+                  <div className={styles.routineTime}>{item.time}</div>
+                  <h3 className={styles.routineCardTitle}>{item.title}</h3>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ===== TESTIMONIALS ===== */}
       <section className={`section-padding ${styles.testimonials}`}>
         <div className="container">
           <div className="text-center">
-            <span className="badge">💬 Parent Stories</span>
+            <span className="badge"><MessageSquare size={16} style={{display: 'inline', marginRight: '4px'}} /> Parent Stories</span>
             <h2 className="section-title">What Parents Say</h2>
             <p className="section-subtitle">
               Don&apos;t just take our word for it — hear from the families who trust us with their little stars.
@@ -556,13 +619,15 @@ export default function HomePage() {
                 <div className={styles.quoteIcon}>&ldquo;</div>
                 <p className={styles.testimonialText}>{t.text}</p>
                 <div className={styles.testimonialAuthor}>
-                  <div className={styles.authorEmoji}>{t.emoji}</div>
+                  <div className={styles.authorEmoji}><t.emoji size={24} /></div>
                   <div>
                     <div className={styles.authorName}>{t.name}</div>
                     <div className={styles.authorRole}>{t.role}</div>
                   </div>
                 </div>
-                <div className={styles.stars}>⭐⭐⭐⭐⭐</div>
+                <div className={styles.stars}>
+                  {[...Array(5)].map((_, j) => <Star key={j} size={16} fill="#F59E0B" color="#F59E0B" style={{display: 'inline', marginRight: '2px'}} />)}
+                </div>
               </div>
             ))}
           </div>
@@ -584,10 +649,10 @@ export default function HomePage() {
             </p>
             <div className={styles.ctaBtns}>
               <Link href="/contact" className="btn-primary" id="cta-enroll-btn">
-                🎒 Enroll Now
+                <Backpack size={18} style={{display: 'inline', marginRight: '6px', marginBottom: '-4px'}} /> Enroll Now
               </Link>
               <Link href="/gallery" className="btn-outline" id="cta-gallery-btn" style={{ borderColor: 'rgba(255,255,255,0.5)', color: '#fff' }}>
-                View Gallery 📸
+                View Gallery <Camera size={18} style={{display: 'inline', marginLeft: '6px', marginBottom: '-4px'}} />
               </Link>
             </div>
           </div>
@@ -599,7 +664,7 @@ export default function HomePage() {
         <div className="container">
           <div className={styles.contactGrid}>
             <div className={styles.infoCol}>
-              <span className="badge">📞 Get in Touch</span>
+              <span className="badge"><Phone size={16} style={{display: 'inline', marginRight: '4px'}} /> Get in Touch</span>
               <h2 className="section-title" style={{ marginBottom: '12px' }}>Let&apos;s Connect!</h2>
               <p className={styles.infoDesc}>
                 Have questions about admissions, fees, or our programs? Our team is here to help!
@@ -608,12 +673,20 @@ export default function HomePage() {
               <div className={styles.infoCards}>
                 {contactInfo.map((info, i) => (
                   <div key={i} className={styles.infoCard}>
-                    <div className={styles.infoIcon}>{info.icon}</div>
+                    <div className={styles.infoIcon}><info.icon size={24} /></div>
                     <div>
                       <div className={styles.infoCardTitle}>{info.title}</div>
-                      {info.lines.map((line, j) => (
-                        <div key={j} className={styles.infoLine}>{line}</div>
-                      ))}
+                      {info.lines.map((line, j) => {
+                        let href = '';
+                        if (info.title === 'Phone') href = `tel:${line}`;
+                        else if (info.title === 'Email') href = `mailto:${line}`;
+                        else if (info.title === 'Address') href = 'https://www.google.com/maps?q=No.2+Anna+main+road,+Jayalakshmi+Nagar,+Nerkundram,+Chennai-107';
+                        return href ? (
+                          <a key={j} href={href} target="_blank" rel="noopener noreferrer" className={styles.infoLineLink}>{line}</a>
+                        ) : (
+                          <div key={j} className={styles.infoLine}>{line}</div>
+                        );
+                      })}
                     </div>
                   </div>
                 ))}
@@ -718,15 +791,27 @@ export default function HomePage() {
 
       {/* ===== MAP ===== */}
       <section className={styles.mapSection}>
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1!2d80.2707!3d13.0827!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a52664fc6e8b4f1%3A0xd6b9e81b3f7f1a2e!2sLITTLE%20STAR%20NURSERY%20%26%20PRIMARY%20SCHOOL%20%7C%20STAR%20KIDS%20PRE%20SCHOOL%20%26%20DAY%20CARE%20%7C%20STAR%20TUITION%20CENTRE!5e0!3m2!1sen!2sin!4v1750420000000!5m2!1sen!2sin"
-          className={styles.mapIframe}
-          allowFullScreen
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-          title="Little Star School Location"
-        />
-
+        <a
+          href="https://www.google.com/maps?q=No.2+Anna+main+road,+Jayalakshmi+Nagar,+Nerkundram,+Chennai-107"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.mapLink}
+        >
+          <div className={styles.mapStatic}>
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1!2d80.2707!3d13.0827!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a52664fc6e8b4f1%3A0xd6b9e81b3f7f1a2e!2sLITTLE%20STAR%20NURSERY%20%26%20PRIMARY%20SCHOOL!5e0!3m2!1sen!2sin!4v1750420000000!5m2!1sen!2sin"
+              className={styles.mapIframe}
+              loading="lazy"
+              title="Little Star Location"
+            />
+            <div className={styles.mapOverlay}>
+              <p className={styles.mapAddress}>
+                No.2 Anna main road, Jayalakshmi Nagar<br />
+                Nerkundram, Chennai-107
+              </p>
+            </div>
+          </div>
+        </a>
       </section>
     </>
   );

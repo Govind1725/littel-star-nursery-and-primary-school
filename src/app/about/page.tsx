@@ -9,10 +9,11 @@ export const metadata: Metadata = {
 };
 
 const team = [
-  { name: 'Mrs. Lakshmi Devi', role: 'Principal', exp: '20 years experience' },
-  { name: 'Mr. Ramesh Kumar', role: 'Vice Principal', exp: '15 years experience' },
-  { name: 'Mrs. Priya Nair', role: 'Head of Nursery', exp: '12 years experience' },
-  { name: 'Mrs. Deepa Raj', role: 'Primary Coordinator', exp: '10 years experience' },
+  { name: 'Dr.G.Muthukumar  M.C.A,Ph.D, B.ed', role: 'Founder and Correspondent', exp: '' },
+  { name: 'Mrs. Bavani Muthukumar M.SC', role: 'Principal', exp: '' },
+  { name: 'Mrs Sugans Rekha B.Lit', role: 'Head Mistress', exp: '' },
+  { name: 'Mrs. J. Murugeshwari', role: 'KG Coordinator', exp: '' },
+  { name: 'Ms Dhanya', role: 'Primary Coordinator', exp: '' },
 ];
 
 const values = [
@@ -111,12 +112,37 @@ export default function AboutPage() {
       <section className={`section-padding ${styles.ctaSection}`}>
         <div className="container text-center">
           <h2 className="section-title">Join the Little Star Family</h2>
-          <p className="section-subtitle">Admissions are open for 2024–25. Give your child the best start!</p>
+          <p className="section-subtitle">Admissions are open for 2026–27. Give your child the best start!</p>
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link href="/contact" className="btn-primary" id="about-enroll-btn">Enroll Now</Link>
             <Link href="/gallery" className="btn-secondary" id="about-gallery-btn">View Gallery</Link>
           </div>
         </div>
+      </section>
+
+      {/* ===== MAP ===== */}
+      <section className={styles.mapSection}>
+        <a
+          href="https://www.google.com/maps?q=No.2+Anna+main+road,+Jayalakshmi+Nagar,+Nerkundram,+Chennai-107"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.mapLink}
+        >
+          <div className={styles.mapStatic}>
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1!2d80.2707!3d13.0827!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a52664fc6e8b4f1%3A0xd6b9e81b3f7f1a2e!2sLITTLE%20STAR%20NURSERY%20%26%20PRIMARY%20SCHOOL!5e0!3m2!1sen!2sin!4v1750420000000!5m2!1sen!2sin"
+              className={styles.mapIframe}
+              loading="lazy"
+              title="Little Star Location"
+            />
+            <div className={styles.mapOverlay}>
+              <p className={styles.mapAddress}>
+                No.2 Anna main road, Jayalakshmi Nagar<br />
+                Nerkundram, Chennai-107
+              </p>
+            </div>
+          </div>
+        </a>
       </section>
     </>
   );

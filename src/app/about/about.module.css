@@ -17,8 +17,8 @@
   border-color: transparent;
 }
 
-.visionCard h2 { color: var(--white); }
-.visionCard p { color: var(--white); }
+.visionCard.missionCard h2 { color: var(--yellow) !important; }
+.visionCard.missionCard p { color: #FEF08A !important; }
 
 .missionIcon {
   font-size: 3rem;
@@ -194,19 +194,28 @@
 }
 
 .teamCard {
-  background: var(--white);
+  background: linear-gradient(135deg, var(--violet-dark), var(--violet));
   border-radius: var(--radius-lg);
   padding: 40px 24px;
   text-align: center;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 8px 30px rgba(124, 58, 237, 0.3);
   transition: var(--transition-bounce);
-  border: 2px solid transparent;
+  border: 2px solid var(--yellow);
 }
 
 .teamCard:hover {
   transform: translateY(-10px);
-  border-color: var(--yellow);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 12px 40px rgba(124, 58, 237, 0.5);
+}
+
+.teamCard .teamName {
+  color: var(--yellow);
+  font-size: 1.3rem;
+}
+
+.teamCard .teamRole {
+  color: var(--white);
+  font-weight: 700;
 }
 
 .teamEmoji {
@@ -249,6 +258,58 @@
 /* CTA */
 .ctaSection {
   background: linear-gradient(135deg, var(--yellow-light) 0%, var(--violet-light) 100%);
+}
+
+/* ===== MAP ===== */
+.mapSection {
+  border-top: 3px solid var(--yellow);
+}
+
+.mapLink {
+  display: block;
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.mapStatic {
+  position: relative;
+  height: 350px;
+  overflow: hidden;
+}
+
+.mapIframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+  pointer-events: none;
+}
+
+.mapOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.35);
+  transition: background 0.3s ease;
+}
+
+.mapLink:hover .mapOverlay {
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.mapAddress {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.1rem;
+  color: var(--white);
+  text-align: center;
+  line-height: 1.7;
+  margin: 0;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
 }
 
 /* Responsive */

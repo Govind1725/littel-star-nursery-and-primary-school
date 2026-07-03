@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import styles from './Navbar.module.css';
 
@@ -36,7 +37,7 @@ export default function Navbar() {
         {/* Logo */}
         <Link href="/" className={styles.logo}>
           <div className={styles.logoIcon}>
-            <span>⭐</span>
+            <Image src="/images/little%20star%20logo.png" alt="Little Star" width={72} height={72} />
           </div>
           <div className={styles.logoText}>
             <span className={styles.logoMain}>Little Star</span>

@@ -8,9 +8,11 @@ import {
 } from '@/lib/store';
 import styles from './admin.module.css';
 
+import ReceiptGenerator from './ReceiptGenerator';
+
 const ADMIN_PASSWORD = 'littlestar2024';
 
-type Tab = 'media' | 'announcements';
+type Tab = 'media' | 'announcements' | 'receipts';
 type MediaFilter = 'all' | 'image' | 'video';
 
 export default function AdminPage() {
@@ -25,6 +27,8 @@ export default function AdminPage() {
   const [mediaForm, setMediaForm] = useState({ type: 'image' as 'image' | 'video', title: '', description: '', url: '' });
   const [mediaLoading, setMediaLoading] = useState(false);
   const [mediaSuccess, setMediaSuccess] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [previewUrl, setPreviewUrl] = useState('');
 
   // Announcement state
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
@@ -66,14 +70,49 @@ export default function AdminPage() {
   }
 
   // Media handlers
+  async function compressImage(file: File, maxW = 1200): Promise<Blob> {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let { width, height } = img;
+        if (width > maxW) { height = Math.round(height * maxW / width); width = maxW; }
+        canvas.width = width; canvas.height = height;
+        const ctx = canvas.getContext('2d')!;
+        ctx.drawImage(img, 0, 0, width, height);
+        canvas.toBlob(b => resolve(b!), 'image/webp', 0.8);
+      };
+      img.src = URL.createObjectURL(file);
+    });
+  }
+
   async function handleAddMedia(e: React.FormEvent) {
     e.preventDefault();
     if (!mediaForm.title.trim()) return;
     setMediaLoading(true);
-    await new Promise(r => setTimeout(r, 600));
-    addMediaItem({ type: mediaForm.type, title: mediaForm.title, description: mediaForm.description, url: mediaForm.url });
+
+    let finalUrl = mediaForm.url;
+    const fileInput = fileInputRef.current;
+
+    if (finalUrl.startsWith('/uploads/')) {
+      // Already imported via Drive — use as-is
+    } else if (fileInput?.files?.[0] && !finalUrl.startsWith('data:')) {
+      const file = fileInput.files[0];
+      const uploadFile = mediaForm.type === 'image' ? await compressImage(file) : file;
+      const fd = new FormData();
+      fd.append('file', uploadFile, file.name);
+      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (data.url) finalUrl = data.url;
+    } else if (finalUrl.startsWith('data:')) {
+      finalUrl = mediaForm.url;
+    }
+
+    addMediaItem({ type: mediaForm.type, title: mediaForm.title, description: mediaForm.description, url: finalUrl });
     setMedia(getMediaItems());
     setMediaForm({ type: 'image', title: '', description: '', url: '' });
+    setPreviewUrl('');
+    if (fileInputRef.current) fileInputRef.current.value = '';
     setMediaSuccess('Media added successfully!');
     setMediaLoading(false);
     setTimeout(() => setMediaSuccess(''), 3000);
@@ -217,6 +256,13 @@ export default function AdminPage() {
           >
             Announcements
           </button>
+          <button
+            className={`${styles.tab} ${tab === 'receipts' ? styles.tabActive : ''}`}
+            onClick={() => setTab('receipts')}
+            id="admin-tab-receipts"
+          >
+            Receipt Generator
+          </button>
         </div>
 
         {/* ===== MEDIA TAB ===== */}
@@ -260,16 +306,34 @@ export default function AdminPage() {
                     />
                   </div>
                   <div className={styles.formGroup}>
-                    <label htmlFor="media-url">URL (optional)</label>
+                    <label htmlFor="media-file">
+                      {mediaForm.type === 'image' ? 'Image' : 'Video'} File
+                    </label>
                     <input
-                      id="media-url"
-                      type="url"
-                      placeholder="https://example.com/image.jpg"
-                      value={mediaForm.url}
-                      onChange={e => setMediaForm(p => ({ ...p, url: e.target.value }))}
-                      className={styles.input}
+                      id="media-file"
+                      ref={fileInputRef}
+                      type="file"
+                      accept={mediaForm.type === 'image' ? 'image/*' : 'video/*'}
+                      className={styles.fileInput}
+                      onChange={e => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          setPreviewUrl(URL.createObjectURL(file));
+                          setMediaForm(p => ({ ...p, url: '' }));
+                        }
+                      }}
                     />
+                    {previewUrl && (
+                      <div className={styles.filePreview}>
+                        {mediaForm.type === 'image' ? (
+                          <img src={previewUrl} alt="Preview" />
+                        ) : (
+                          <video src={previewUrl} controls />
+                        )}
+                      </div>
+                    )}
                   </div>
+
                   <div className={`${styles.formGroup} ${styles.fullWidth}`}>
                     <label htmlFor="media-desc">Description (optional)</label>
                     <input
@@ -324,6 +388,15 @@ export default function AdminPage() {
                   {filteredMedia.map((item) => (
                     <div key={item.id} className={styles.mediaItem}>
                       <div className={styles.mediaItemThumb}>
+                        {item.url ? (
+                          item.type === 'image' ? (
+                            <img src={item.url} alt={item.title} className={styles.thumbImg} />
+                          ) : (
+                            <video src={item.url} className={styles.thumbImg} />
+                          )
+                        ) : (
+                          <span>{item.type === 'image' ? '🖼️' : '🎬'}</span>
+                        )}
                       </div>
                       <div className={styles.mediaItemInfo}>
                         <div className={styles.mediaItemTitle}>{item.title}</div>
@@ -460,6 +533,11 @@ export default function AdminPage() {
               )}
             </div>
           </div>
+        )}
+
+        {/* ===== RECEIPTS TAB ===== */}
+        {tab === 'receipts' && (
+          <ReceiptGenerator />
         )}
       </div>
 

@@ -59,35 +59,32 @@ export default function ChildCarePage() {
         </div>
       </section>
 
-      {/* ===== DAILY SCHEDULE TIMELINE ===== */}
+      {/* ===== DAILY ROUTINE ===== */}
       <section className={`section-padding ${styles.scheduleSection}`}>
-        <div className="container">
-          <div className="text-center">
-            <span className="badge">Daily Routine</span>
-            <h2 className="section-title">A Day at Little Star</h2>
-            <p className="section-subtitle">
-              A balanced schedule of learning, play, and rest.
-            </p>
-          </div>
+        <div className="container" style={{ textAlign: 'center', maxWidth: '1200px' }}>
+          <div className={styles.routineBadge}>DAILY ROUTINE</div>
+          <h2 className={styles.routineTitle}>A Day at Little Star</h2>
+          <p className={styles.routineSub}>A balanced schedule of learning, play, and rest.</p>
 
-          <div className={styles.timeline}>
-            {[
-              { time: '09:00 AM', title: 'Arrival & Greetings' },
-              { time: '09:30 AM', title: 'Circle Time' },
-              { time: '10:00 AM', title: 'Learning Activities (Art, Language)' },
-              { time: '11:00 AM', title: 'Snack Break' },
-              { time: '12:00 PM', title: 'Lunch Time' },
-              { time: '01:00 PM', title: 'Nap / Quiet Time' },
-              { time: '02:30 PM', title: 'Outdoor / Free Play' },
-              { time: '03:30 PM', title: 'Departure' },
-            ].map((slot, i) => (
-              <div key={i} className={styles.timelineItem}>
-                <div className={styles.timelineContent}>
-                  <div className={styles.timeTag}>{slot.time}</div>
-                  <h3 className={styles.timelineTitle}>{slot.title}</h3>
+          <div className={styles.routineTimeline}>
+            <div className={styles.timelineLine}></div>
+            <div className={styles.timelineCards}>
+              {[
+                { time: '8:45 AM', title: 'Entry', icon: '/images/routine_entry.png', bg: '#FFDFDF' },
+                { time: '9:00 AM', title: 'Prayer start', icon: '/images/routine_prayer.png', bg: '#FFF1B8' },
+                { time: '9:15 AM', title: 'Classes start', icon: '/images/routine_classes.png', bg: '#BDECB6' },
+                { time: '10:45 – 11:00 AM', title: 'Morning break', icon: '/images/routine_break.png', bg: '#C2DBFF' },
+                { time: '12:30 – 1:15 PM', title: 'Lunch break', icon: '/images/routine_lunch.png', bg: '#FFD1D1' },
+              ].map((item, i) => (
+                <div key={i} className={`${styles.routineCard} ${item.active ? styles.activeCard : ''}`}>
+                  <div className={styles.routineIconWrapper} style={{ backgroundColor: item.bg }}>
+                    <img src={item.icon} alt={item.title} width={64} height={64} className={styles.routineIconImg} />
+                  </div>
+                  <div className={styles.routineTime}>{item.time}</div>
+                  <h3 className={styles.routineCardTitle}>{item.title}</h3>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -114,9 +111,6 @@ export default function ChildCarePage() {
                   <h4>Snacks</h4>
                   <p>Healthy sprouts, fruit salads, or milk.</p>
                 </div>
-              </div>
-              <div className={styles.allergyNote}>
-                <strong>Allergy Note:</strong> We maintain strict allergy protocols. Please inform us of any dietary restrictions.
               </div>
             </div>
             <div className={styles.splitImage}>

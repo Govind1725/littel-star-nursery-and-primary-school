@@ -21,10 +21,10 @@ export default function ContactPage() {
   };
 
   const contactInfo = [
-    { icon: '📍', title: 'Address', lines: ['123 Star Lane, Sunshine Avenue', 'Tamil Nadu 600001, India'] },
-    { icon: '📞', title: 'Phone', lines: ['+91 98765 43210', '+91 044-2345-6789'] },
-    { icon: '✉️', title: 'Email', lines: ['info@littlestar.edu.in', 'admissions@littlestar.edu.in'] },
-    { icon: '🕐', title: 'Office Hours', lines: ['Mon–Fri: 8:00 AM – 5:00 PM', 'Saturday: 9:00 AM – 1:00 PM'] },
+    { icon: '📍', title: 'Address', lines: ['No.2 Anna main road, Jayalakshmi Nagar', 'Nerkundram, Chennai-107'] },
+    { icon: '📞', title: 'Phone', lines: ['9941294084'] },
+    { icon: '✉️', title: 'Email', lines: ['littlestarnpschoolnerkundram@gmail.com'] },
+    { icon: '🕐', title: 'Office Hours', lines: ['Mon–Fri: 9:00 AM – 5:00 PM', 'Saturday: 9:00 AM – 3:00 PM', 'Sunday & Govt. holidays: Holiday'] },
   ];
 
   return (
@@ -55,9 +55,17 @@ export default function ContactPage() {
                     <div className={styles.infoIcon}>{info.icon}</div>
                     <div>
                       <div className={styles.infoCardTitle}>{info.title}</div>
-                      {info.lines.map((line, j) => (
-                        <div key={j} className={styles.infoLine}>{line}</div>
-                      ))}
+                      {info.lines.map((line, j) => {
+                        let href = '';
+                        if (info.title === 'Phone') href = `tel:${line}`;
+                        else if (info.title === 'Email') href = `mailto:${line}`;
+                        else if (info.title === 'Address') href = 'https://www.google.com/maps?q=No.2+Anna+main+road,+Jayalakshmi+Nagar,+Nerkundram,+Chennai-107';
+                        return href ? (
+                          <a key={j} href={href} target="_blank" rel="noopener noreferrer" className={styles.infoLineLink}>{line}</a>
+                        ) : (
+                          <div key={j} className={styles.infoLine}>{line}</div>
+                        );
+                      })}
                     </div>
                   </div>
                 ))}
@@ -162,15 +170,29 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Map placeholder */}
+      {/* ===== MAP ===== */}
       <section className={styles.mapSection}>
-        <div className={styles.mapPlaceholder}>
-          <div className={styles.mapContent}>
-            <div className={styles.mapPin}>📍</div>
-            <h3>Find Us Here</h3>
-            <p>123 Star Lane, Sunshine Avenue, Tamil Nadu 600001</p>
+        <a
+          href="https://www.google.com/maps?q=No.2+Anna+main+road,+Jayalakshmi+Nagar,+Nerkundram,+Chennai-107"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.mapLink}
+        >
+          <div className={styles.mapStatic}>
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1!2d80.2707!3d13.0827!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a52664fc6e8b4f1%3A0xd6b9e81b3f7f1a2e!2sLITTLE%20STAR%20NURSERY%20%26%20PRIMARY%20SCHOOL!5e0!3m2!1sen!2sin!4v1750420000000!5m2!1sen!2sin"
+              className={styles.mapIframe}
+              loading="lazy"
+              title="Little Star Location"
+            />
+            <div className={styles.mapOverlay}>
+              <p className={styles.mapAddress}>
+                No.2 Anna main road, Jayalakshmi Nagar<br />
+                Nerkundram, Chennai-107
+              </p>
+            </div>
           </div>
-        </div>
+        </a>
       </section>
     </>
   );

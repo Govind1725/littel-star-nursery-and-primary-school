@@ -2,8 +2,8 @@
 
 import styles from './WhatsAppButton.module.css';
 
-const PHONE_NUMBER = '919999999999';
-const WHATSAPP_NUMBER = '919999999999';
+const PHONE_NUMBER = '919941294084';
+const WHATSAPP_NUMBER = '919941294084';
 
 export default function WhatsAppButton() {
   const handlePhone = () => {

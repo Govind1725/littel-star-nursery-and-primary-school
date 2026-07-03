@@ -27,22 +27,17 @@
 }
 
 .logoIcon {
-  width: 46px;
-  height: 46px;
-  background: linear-gradient(135deg, #FFD700, #FFC107);
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.4rem;
-  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
-  animation: pulse-glow 3s ease-in-out infinite;
-  transition: transform 0.3s ease;
   flex-shrink: 0;
+  line-height: 0;
 }
 
-.logo:hover .logoIcon {
-  transform: rotate(20deg) scale(1.1);
+.logoIcon img {
+  width: 72px;
+  height: auto;
+  display: block;
 }
 
 .logoText {
