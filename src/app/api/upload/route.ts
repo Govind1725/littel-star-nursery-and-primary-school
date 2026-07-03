@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
-import { put } from '@vercel/blob';
+import { supabase, STORAGE_BUCKET } from '@/lib/supabase';
 
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
 const MAX_VIDEO_SIZE = 200 * 1024 * 1024; // 200MB
@@ -45,10 +45,30 @@ export async function POST(req: NextRequest) {
     const ext = path.extname(file.name) || (isImage ? '.webp' : '.mp4');
     const filename = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}${ext}`;
 
-    // Cloud storage upload if BLOB token is configured on Vercel
-    if (process.env.BLOB_READ_WRITE_TOKEN) {
-      const blob = await put(filename, file, { access: 'public', storeId: process.env.littelstarnp_STORE_ID });
-      return NextResponse.json({ url: blob.url });
+    // Upload to Supabase Storage if configured
+    if (supabase) {
+      const buffer = Buffer.from(await file.arrayBuffer());
+      const { error } = await supabase.storage
+        .from(STORAGE_BUCKET)
+        .upload(filename, buffer, {
+          contentType: file.type,
+          cacheControl: '3600',
+          upsert: false,
+        });
+
+      if (error) {
+        if (error.message?.includes('bucket')) {
+          return NextResponse.json({ error: `Storage bucket "${STORAGE_BUCKET}" not found. Please create it in your Supabase dashboard.` }, { status: 500 });
+        }
+        console.error('Supabase upload error:', error);
+        return NextResponse.json({ error: `Upload failed: ${error.message}` }, { status: 500 });
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from(STORAGE_BUCKET)
+        .getPublicUrl(filename);
+
+      return NextResponse.json({ url: publicUrl });
     }
 
     // Local fallback for local development
