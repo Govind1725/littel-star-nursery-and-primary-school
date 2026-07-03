@@ -19,7 +19,7 @@ export interface Announcement {
 // ========== MEDIA (API-backed, centralized database) ==========
 export async function getMediaItems(): Promise<MediaItem[]> {
   try {
-    const res = await fetch('/api/media', { cache: 'no-store' });
+    const res = await fetch(`/api/media?t=${Date.now()}`, { cache: 'no-store' });
     if (!res.ok) return [];
     return res.json();
   } catch {
@@ -54,7 +54,7 @@ export async function deleteMediaItem(id: string): Promise<boolean> {
 
 export async function getAnnouncements(): Promise<Announcement[]> {
   try {
-    const res = await fetch('/api/announcements', { cache: 'no-store' });
+    const res = await fetch(`/api/announcements?t=${Date.now()}`, { cache: 'no-store' });
     if (!res.ok) return [];
     return res.json();
   } catch {

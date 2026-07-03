@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readAnnouncements, writeAnnouncements } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+
 const noCacheHeaders = {
   'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
   'Pragma': 'no-cache',
