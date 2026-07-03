@@ -34,8 +34,12 @@ function readLocalData(): Announcement[] {
 }
 
 function writeLocalData(items: Announcement[]): void {
-  ensureDataDir();
-  fs.writeFileSync(DATA_FILE, JSON.stringify(items, null, 2));
+  try {
+    ensureDataDir();
+    fs.writeFileSync(DATA_FILE, JSON.stringify(items, null, 2));
+  } catch (err) {
+    console.error('Failed to write local announcements file:', err);
+  }
 }
 
 // REST call helper to Vercel KV (Upstash Redis REST API)
@@ -140,8 +144,12 @@ function readLocalMedia(): MediaItem[] {
 }
 
 function writeLocalMedia(items: MediaItem[]): void {
-  ensureDataDir();
-  fs.writeFileSync(MEDIA_FILE, JSON.stringify(items, null, 2));
+  try {
+    ensureDataDir();
+    fs.writeFileSync(MEDIA_FILE, JSON.stringify(items, null, 2));
+  } catch (err) {
+    console.error('Failed to write local media file:', err);
+  }
 }
 
 async function getKvMedia(): Promise<MediaItem[] | null> {
