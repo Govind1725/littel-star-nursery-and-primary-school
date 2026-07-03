@@ -40,13 +40,26 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Title and content are required' }, { status: 400, headers: noCacheHeaders });
   }
 
+  const dateStr = body.date || new Date().toISOString().split('T')[0];
+  const parsed = new Date(dateStr);
+  if (isNaN(parsed.getTime())) {
+    return NextResponse.json({ error: 'Invalid date format' }, { status: 400, headers: noCacheHeaders });
+  }
+  const validDate = parsed.toISOString().split('T')[0];
+  const now = new Date();
+  const minDate = new Date(now.getFullYear() - 5, 0, 1);
+  const maxDate = new Date(now.getFullYear() + 2, 11, 31);
+  if (parsed < minDate || parsed > maxDate) {
+    return NextResponse.json({ error: 'Date is out of valid range (5 years ago to 2 years ahead)' }, { status: 400, headers: noCacheHeaders });
+  }
+
   const items = await readAnnouncements();
   const newItem: Announcement = {
-    id: Date.now().toString(),
+    id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     title: body.title.trim(),
     content: body.content.trim(),
     category: body.category || 'general',
-    date: body.date || new Date().toISOString().split('T')[0],
+    date: validDate,
     createdAt: new Date().toISOString(),
   };
   items.unshift(newItem);

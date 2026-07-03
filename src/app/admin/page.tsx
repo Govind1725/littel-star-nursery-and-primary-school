@@ -30,6 +30,23 @@ export default function AdminPage() {
   const [mediaError, setMediaError] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState('');
+  const previewUrlRef = useRef('');
+
+  useEffect(() => {
+    return () => {
+      if (previewUrlRef.current) {
+        URL.revokeObjectURL(previewUrlRef.current);
+      }
+    };
+  }, []);
+
+  function setPreviewUrlSafe(url: string) {
+    if (previewUrlRef.current) {
+      URL.revokeObjectURL(previewUrlRef.current);
+    }
+    previewUrlRef.current = url;
+    setPreviewUrl(url);
+  }
 
   // Announcement state
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
@@ -77,16 +94,24 @@ export default function AdminPage() {
 
   // Media handlers
   async function compressImage(file: File, maxW = 1200): Promise<Blob> {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const img = new Image();
       img.onload = () => {
+        URL.revokeObjectURL(img.src);
         const canvas = document.createElement('canvas');
         let { width, height } = img;
         if (width > maxW) { height = Math.round(height * maxW / width); width = maxW; }
         canvas.width = width; canvas.height = height;
         const ctx = canvas.getContext('2d')!;
         ctx.drawImage(img, 0, 0, width, height);
-        canvas.toBlob(b => resolve(b!), 'image/webp', 0.8);
+        canvas.toBlob(b => {
+          if (b) resolve(b);
+          else reject(new Error('Image compression failed'));
+        }, 'image/webp', 0.8);
+      };
+      img.onerror = () => {
+        URL.revokeObjectURL(img.src);
+        reject(new Error('Failed to load image for compression'));
       };
       img.src = URL.createObjectURL(file);
     });
@@ -111,11 +136,20 @@ export default function AdminPage() {
       return;
     }
 
+    // Validate URL format if URL is provided (no file)
+    if (!file && finalUrl) {
+      try {
+        new URL(finalUrl);
+      } catch {
+        setMediaError('Please enter a valid URL (e.g. https://example.com/image.jpg)');
+        return;
+      }
+    }
+
     setMediaLoading(true);
 
     try {
       if (file) {
-        // Format check
         if (mediaForm.type === 'image' && !file.type.startsWith('image/')) {
           throw new Error('Please upload an image file (PNG, JPG, WEBP, etc.)');
         }
@@ -129,18 +163,23 @@ export default function AdminPage() {
         
         const res = await fetch('/api/upload', { method: 'POST', body: fd });
         if (!res.ok) {
-          throw new Error('Upload failed. Please try again.');
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.error || 'Upload failed. Please try again.');
         }
         const data = await res.json();
         if (!data.url) {
-          throw new Error(data.error || 'Server did not return file URL');
+          throw new Error('Server did not return file URL');
         }
         finalUrl = data.url;
       }
 
       // Check duplicates
-      if (media.some(m => m.title.toLowerCase() === mediaForm.title.trim().toLowerCase() || (finalUrl && m.url === finalUrl))) {
-        throw new Error('A media item with this title or URL already exists');
+      const titleLower = mediaForm.title.trim().toLowerCase();
+      if (media.some(m => m.title.toLowerCase() === titleLower)) {
+        throw new Error('A media item with this title already exists');
+      }
+      if (finalUrl && media.some(m => m.url && m.url === finalUrl)) {
+        throw new Error('A media item with this URL already exists');
       }
 
       const added = await addMediaItem({ type: mediaForm.type, title: mediaForm.title.trim(), description: mediaForm.description.trim(), url: finalUrl });
@@ -151,7 +190,7 @@ export default function AdminPage() {
       const items = await getMediaItems();
       setMedia(items);
       setMediaForm({ type: 'image', title: '', description: '', url: '' });
-      setPreviewUrl('');
+      setPreviewUrlSafe('');
       if (fileInputRef.current) fileInputRef.current.value = '';
       setMediaSuccess('Media added successfully!');
       setTimeout(() => setMediaSuccess(''), 4000);
@@ -472,20 +511,36 @@ export default function AdminPage() {
                       onChange={e => {
                         const file = e.target.files?.[0];
                         if (file) {
-                          setPreviewUrl(URL.createObjectURL(file));
+                          setPreviewUrlSafe(URL.createObjectURL(file));
                           setMediaForm(p => ({ ...p, url: '' }));
                         }
                       }}
                     />
-                    {previewUrl && (
+                    {(previewUrl || mediaForm.url) && (
                       <div className={styles.filePreview}>
                         {mediaForm.type === 'image' ? (
-                          <img src={previewUrl} alt="Preview" />
+                          <img src={previewUrl || mediaForm.url} alt="Preview" onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
                         ) : (
-                          <video src={previewUrl} controls />
+                          <video src={previewUrl || mediaForm.url} controls />
                         )}
                       </div>
                     )}
+                  </div>
+
+                  <div className={styles.formGroup}>
+                    <label htmlFor="media-url">Or paste a URL</label>
+                    <input
+                      id="media-url"
+                      type="url"
+                      placeholder={`${mediaForm.type === 'image' ? 'Image' : 'Video'} URL (e.g. YouTube, Google Drive)`}
+                      value={mediaForm.url}
+                      onChange={e => {
+                        setMediaForm(p => ({ ...p, url: e.target.value }));
+                        if (fileInputRef.current) fileInputRef.current.value = '';
+                        setPreviewUrlSafe('');
+                      }}
+                      className={styles.input}
+                    />
                   </div>
 
                   <div className={`${styles.formGroup} ${styles.fullWidth}`}>

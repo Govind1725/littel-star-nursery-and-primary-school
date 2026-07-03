@@ -20,12 +20,26 @@ export async function PUT(request: NextRequest, context: { params: Promise<unkno
     return NextResponse.json({ error: 'Announcement not found' }, { status: 404, headers: noCacheHeaders });
   }
 
+  const dateStr = body.date ?? items[index].date;
+  if (body.date !== undefined) {
+    const parsed = new Date(dateStr);
+    if (isNaN(parsed.getTime())) {
+      return NextResponse.json({ error: 'Invalid date format' }, { status: 400, headers: noCacheHeaders });
+    }
+    const now = new Date();
+    const minDate = new Date(now.getFullYear() - 5, 0, 1);
+    const maxDate = new Date(now.getFullYear() + 2, 11, 31);
+    if (parsed < minDate || parsed > maxDate) {
+      return NextResponse.json({ error: 'Date is out of valid range (5 years ago to 2 years ahead)' }, { status: 400, headers: noCacheHeaders });
+    }
+  }
+
   items[index] = {
     ...items[index],
     title: body.title?.trim() ?? items[index].title,
     content: body.content?.trim() ?? items[index].content,
     category: body.category ?? items[index].category,
-    date: body.date ?? items[index].date,
+    date: dateStr,
   };
   await writeAnnouncements(items);
 

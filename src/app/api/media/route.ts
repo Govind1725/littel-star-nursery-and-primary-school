@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
 
     const items = await readMediaItems();
     const newItem: MediaItem = {
-      id: Date.now().toString(),
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       type: body.type || 'image',
       url: body.url,
       title: body.title.trim(),

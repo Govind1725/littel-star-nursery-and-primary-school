@@ -34,9 +34,13 @@ export async function addMediaItem(item: Omit<MediaItem, 'id' | 'createdAt'>): P
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(item),
     });
-    if (!res.ok) return null;
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `Server error (${res.status})`);
+    }
     return res.json();
-  } catch {
+  } catch (err) {
+    if (err instanceof Error) throw err;
     return null;
   }
 }
@@ -44,8 +48,13 @@ export async function addMediaItem(item: Omit<MediaItem, 'id' | 'createdAt'>): P
 export async function deleteMediaItem(id: string): Promise<boolean> {
   try {
     const res = await fetch(`/api/media/${id}`, { method: 'DELETE' });
-    return res.ok;
-  } catch {
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `Server error (${res.status})`);
+    }
+    return true;
+  } catch (err) {
+    if (err instanceof Error) throw err;
     return false;
   }
 }
@@ -69,9 +78,13 @@ export async function addAnnouncement(ann: Omit<Announcement, 'id' | 'createdAt'
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(ann),
     });
-    if (!res.ok) return null;
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `Server error (${res.status})`);
+    }
     return res.json();
-  } catch {
+  } catch (err) {
+    if (err instanceof Error) throw err;
     return null;
   }
 }
@@ -83,9 +96,13 @@ export async function updateAnnouncement(id: string, ann: Partial<Announcement>)
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(ann),
     });
-    if (!res.ok) return null;
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `Server error (${res.status})`);
+    }
     return res.json();
-  } catch {
+  } catch (err) {
+    if (err instanceof Error) throw err;
     return null;
   }
 }
@@ -93,8 +110,13 @@ export async function updateAnnouncement(id: string, ann: Partial<Announcement>)
 export async function deleteAnnouncement(id: string): Promise<boolean> {
   try {
     const res = await fetch(`/api/announcements/${id}`, { method: 'DELETE' });
-    return res.ok;
-  } catch {
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `Server error (${res.status})`);
+    }
+    return true;
+  } catch (err) {
+    if (err instanceof Error) throw err;
     return false;
   }
 }
