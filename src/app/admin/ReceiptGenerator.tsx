@@ -320,7 +320,7 @@ export default function ReceiptGenerator() {
                   <img 
                     src="/images/little%20star%20logo.png" 
                     alt="School Logo" 
-                    style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'contain' }} 
+                    style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
                   />
                 </div>
                 <div className={styles.receiptTitles}>
