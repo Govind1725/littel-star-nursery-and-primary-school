@@ -142,13 +142,13 @@ function writeLocalMedia(items: MediaItem[]): void {
 }
 
 export async function readMediaItems(): Promise<MediaItem[]> {
-  const dbData = await supabaseRead<MediaItem>(TABLES.media);
+  const dbData = await supabaseRead<MediaItem>(TABLES.gallery);
   if (dbData !== null) return dbData;
   return readLocalMedia();
 }
 
 export async function writeMediaItems(items: MediaItem[]): Promise<void> {
-  const ok = await supabaseWrite<MediaItem>(TABLES.media, items);
+  const ok = await supabaseWrite<MediaItem>(TABLES.gallery, items);
   if (!ok) {
     writeLocalMedia(items);
   }

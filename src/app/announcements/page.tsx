@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getAnnouncements, type Announcement } from '@/lib/store';
+import { useAnnouncements, useRealtimeSubscription } from '@/lib/queries';
+import { TABLES } from '@/lib/supabase';
 import styles from './announcements.module.css';
 
 const categoryConfig = {
@@ -71,33 +72,18 @@ const categoryConfig = {
 };
 
 export default function AnnouncementsPage() {
-  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const { data: announcementsData = [], isLoading } = useAnnouncements();
   const [filter, setFilter] = useState<string>('all');
   const [mounted, setMounted] = useState(false);
 
-  const fetchAnnouncements = async () => {
-    const data = await getAnnouncements();
-    setAnnouncements(data);
-  };
+  // Enable Realtime subscription
+  useRealtimeSubscription(TABLES.announcements, ['announcements']);
 
   useEffect(() => {
     setMounted(true);
-    fetchAnnouncements();
-
-    // Refetch when browser window is focused
-    const handleFocus = () => {
-      fetchAnnouncements();
-    };
-    window.addEventListener('focus', handleFocus);
-
-    // Auto-refresh poll every 10 seconds to sync different devices
-    const interval = setInterval(fetchAnnouncements, 10000);
-
-    return () => {
-      window.removeEventListener('focus', handleFocus);
-      clearInterval(interval);
-    };
   }, []);
+
+  const announcements = announcementsData;
 
   const filtered = filter === 'all'
     ? announcements
@@ -137,7 +123,7 @@ export default function AnnouncementsPage() {
           </div>
 
           {/* Announcements List */}
-          {!mounted ? (
+          {!mounted || isLoading ? (
             <div className={styles.announcementsList}>
               {[...Array(3)].map((_, i) => (
                 <div key={i} className={`${styles.announcementCard} ${styles.skeletonCard}`}>
@@ -161,7 +147,7 @@ export default function AnnouncementsPage() {
           ) : (
             <div className={styles.announcementsList}>
               {filtered.map((ann, i) => {
-                const cfg = categoryConfig[ann.category];
+                const cfg = categoryConfig[ann.category as keyof typeof categoryConfig] || categoryConfig.general;
                 return (
                   <div
                     key={ann.id}
@@ -174,10 +160,10 @@ export default function AnnouncementsPage() {
                     </div>
                     <div className={styles.cardBody}>
                       <div className={styles.cardMeta}>
-                        <span className={styles.cardDate}>📅 {formatDate(ann.date)}</span>
+                        <span className={styles.cardDate}>📅 {formatDate(ann.created_at)}</span>
                       </div>
                       <h3 className={styles.cardTitle}>{ann.title}</h3>
-                      <p className={styles.cardContent}>{ann.content}</p>
+                      <p className={styles.cardContent}>{ann.description}</p>
                     </div>
                   </div>
                 );

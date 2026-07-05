@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import ScrollToTop from "@/components/ScrollToTop";
+import Providers from "./providers";
 
 export const metadata: Metadata = {
   title: {
@@ -39,11 +40,13 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <ScrollToTop />
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
-        <WhatsAppButton />
+        <Providers>
+          <ScrollToTop />
+          <Navbar />
+          <main>{children}</main>
+          <Footer />
+          <WhatsAppButton />
+        </Providers>
       </body>
     </html>
   );

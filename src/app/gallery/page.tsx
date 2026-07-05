@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getMediaItems, type MediaItem } from '@/lib/store';
+import { useGallery, useRealtimeSubscription } from '@/lib/queries';
+import { TABLES } from '@/lib/supabase';
 import styles from './gallery.module.css';
 
 const galleryEmojis = ['🎨', '📸', '🌸', '🎭', '🏃', '🎵', '🔬', '🌿', '🎉', '🏆', '📚', '🤝'];
@@ -15,36 +16,20 @@ const placeholderColors = [
 ];
 
 export default function GalleryPage() {
-  const [media, setMedia] = useState<MediaItem[]>([]);
+  const { data: galleryItems = [], isLoading } = useGallery();
   const [filter, setFilter] = useState<'all' | 'image' | 'video'>('all');
-  const [lightbox, setLightbox] = useState<MediaItem | null>(null);
+  const [lightbox, setLightbox] = useState<any | null>(null);
   const [mounted, setMounted] = useState(false);
 
-  const fetchGallery = async () => {
-    const items = await getMediaItems();
-    setMedia(items);
-  };
+  // Supabase Realtime subscription
+  useRealtimeSubscription(TABLES.gallery, ['gallery']);
 
   useEffect(() => {
     setMounted(true);
-    fetchGallery();
-
-    // Refetch when browser window is focused
-    const handleFocus = () => {
-      fetchGallery();
-    };
-    window.addEventListener('focus', handleFocus);
-
-    // Auto-refresh poll every 10 seconds to sync different devices
-    const interval = setInterval(fetchGallery, 10000);
-
-    return () => {
-      window.removeEventListener('focus', handleFocus);
-      clearInterval(interval);
-    };
   }, []);
 
-  const filtered = filter === 'all' ? media : media.filter((m) => m.type === filter);
+  const media = galleryItems;
+  const filtered = filter === 'all' ? media : media.filter((m) => m.media_type === filter);
 
   return (
     <>
@@ -79,7 +64,7 @@ export default function GalleryPage() {
           </p>
 
           {/* Grid */}
-          {!mounted ? (
+          {!mounted || isLoading ? (
             <div className={styles.galleryGrid}>
               {[...Array(6)].map((_, i) => (
                 <div key={i} className={`${styles.mediaCard} ${styles.skeletonCard}`}>
@@ -112,22 +97,22 @@ export default function GalleryPage() {
                     className={styles.mediaThumb}
                     style={{ background: placeholderColors[i % placeholderColors.length] }}
                   >
-                    {item.url ? (
-                      item.type === 'image' ? (
-                        <img src={item.url} alt={item.title} className={styles.thumbImg} />
+                    {item.media_url ? (
+                      item.media_type === 'image' ? (
+                        <img src={item.media_url} alt={item.title} className={styles.thumbImg} />
                       ) : (
-                        <video src={item.url} className={styles.thumbImg} muted />
+                        <video src={item.media_url} className={styles.thumbImg} muted />
                       )
                     ) : (
                       <div className={styles.thumbPlaceholder}>
                         <span className={styles.thumbEmoji}>{galleryEmojis[i % galleryEmojis.length]}</span>
-                        <span className={styles.thumbType}>{item.type === 'image' ? '🖼️ Photo' : '🎬 Video'}</span>
+                        <span className={styles.thumbType}>{item.media_type === 'image' ? '🖼️ Photo' : '🎬 Video'}</span>
                       </div>
                     )}
                     <div className={styles.mediaOverlay}>
-                      <span className={styles.overlayIcon}>{item.type === 'image' ? '🔍' : '▶️'}</span>
+                      <span className={styles.overlayIcon}>{item.media_type === 'image' ? '🔍' : '▶️'}</span>
                     </div>
-                    {item.type === 'video' && (
+                    {item.media_type === 'video' && (
                       <div className={styles.videoTag}>🎬 Video</div>
                     )}
                   </div>
@@ -137,7 +122,7 @@ export default function GalleryPage() {
                       <p className={styles.mediaDesc}>{item.description}</p>
                     )}
                     <span className={styles.mediaDate}>
-                      {new Date(item.createdAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' })}
+                      {new Date(item.created_at).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' })}
                     </span>
                   </div>
                 </div>
@@ -153,15 +138,15 @@ export default function GalleryPage() {
           <div className={styles.lightboxContent} onClick={(e) => e.stopPropagation()}>
             <button className={styles.lightboxClose} onClick={() => setLightbox(null)}>✕</button>
             <div className={styles.lightboxMedia}>
-              {lightbox.url ? (
-                lightbox.type === 'image' ? (
-                  <img src={lightbox.url} alt={lightbox.title} />
+              {lightbox.media_url ? (
+                lightbox.media_type === 'image' ? (
+                  <img src={lightbox.media_url} alt={lightbox.title} />
                 ) : (
-                  <video src={lightbox.url} controls autoPlay />
+                  <video src={lightbox.media_url} controls autoPlay />
                 )
               ) : (
                 <div className={styles.lightboxPlaceholder}>
-                  <span>{lightbox.type === 'image' ? '🖼️' : '🎬'}</span>
+                  <span>{lightbox.media_type === 'image' ? '🖼️' : '🎬'}</span>
                   <p>No media URL provided</p>
                 </div>
               )}

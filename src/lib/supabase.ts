@@ -19,5 +19,5 @@ export const STORAGE_BUCKET = 'uploads';
 // Table names
 export const TABLES = {
   announcements: 'announcements',
-  media: 'media',
+  gallery: 'gallery',
 };

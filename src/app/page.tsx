@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { getMediaItems, getAnnouncements, type MediaItem, type Announcement } from '@/lib/store';
+import { useGallery, useAnnouncements, useRealtimeSubscription } from '@/lib/queries';
+import { TABLES } from '@/lib/supabase';
 import styles from './page.module.css';
 import { MapPin, Phone, Mail, Clock, Baby, Sprout, Backpack, BookOpen, BrainCircuit, MessageSquare, Users, Heart, Activity, Palette, Sparkles, User, BriefcaseBusiness, PartyPopper, Megaphone, Trophy, Star, Bell, ImageIcon, Check, Video, Smile, Handshake, Dumbbell, Microscope, Camera, Theater, FileAudio, Leaf } from 'lucide-react';
 
@@ -108,7 +109,6 @@ const placeholderColors = [
 ];
 
 export default function HomePage() {
-  const [media, setMedia] = useState<MediaItem[]>([]);
   const [mounted, setMounted] = useState(false);
   const [counted, setCounted] = useState<Set<number>>(new Set());
   const [counts, setCounts] = useState<number[]>([0, 0, 0, 0]);
@@ -116,7 +116,17 @@ export default function HomePage() {
   const [form, setForm] = useState({ name: '', email: '', phone: '', subject: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [homeAnnouncements, setHomeAnnouncements] = useState<Announcement[]>([]);
+
+  // TanStack Query hooks
+  const { data: announcementsData = [] } = useAnnouncements();
+  const { data: galleryData = [] } = useGallery();
+
+  // Supabase Realtime subscriptions
+  useRealtimeSubscription(TABLES.announcements, ['announcements']);
+  useRealtimeSubscription(TABLES.gallery, ['gallery']);
+
+  const media = galleryData;
+  const homeAnnouncements = announcementsData;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -130,33 +140,9 @@ export default function HomePage() {
     setSubmitted(true);
   };
 
-  const fetchHomeData = useCallback(async () => {
-    const [annItems, mediaItems] = await Promise.all([
-      getAnnouncements(),
-      getMediaItems(),
-    ]);
-    setHomeAnnouncements(annItems);
-    setMedia(mediaItems.filter((m) => m.type === 'image'));
-  }, []);
-
   useEffect(() => {
     setMounted(true);
-    fetchHomeData();
-
-    // Refetch when page gets focus
-    const handleFocus = () => {
-      fetchHomeData();
-    };
-    window.addEventListener('focus', handleFocus);
-
-    // Auto-refresh poll every 10 seconds to sync different devices
-    const interval = setInterval(fetchHomeData, 10000);
-
-    return () => {
-      window.removeEventListener('focus', handleFocus);
-      clearInterval(interval);
-    };
-  }, [fetchHomeData]);
+  }, []);
 
   useEffect(() => {
     const el = statsRef.current;
@@ -303,14 +289,17 @@ export default function HomePage() {
               };
               const tag = tagMap[a.category] || tagMap.general;
               const TagIcon = tag.icon;
+              const formattedDate = new Date(a.created_at).toLocaleDateString('en-IN', {
+                year: 'numeric', month: 'short', day: 'numeric'
+              });
               return (
                 <div key={a.id} className={styles.announcementCard} style={{ animationDelay: `${i * 0.1}s` }}>
                   <div className={styles.announcementMeta}>
                     <span className={styles.announcementTag}><TagIcon size={14} style={{display: 'inline', marginRight: '4px'}} />{tag.label}</span>
-                    <span className={styles.announcementDate}>{a.date}</span>
+                    <span className={styles.announcementDate}>{formattedDate}</span>
                   </div>
                   <h3 className={styles.announcementTitle}>{a.title}</h3>
-                  <p className={styles.announcementDesc}>{a.content}</p>
+                  <p className={styles.announcementDesc}>{a.description}</p>
                   <Link href="/announcements" className={styles.announcementLink} id={`announcement-${i}-btn`}>
                     Read More →
                   </Link>
@@ -557,8 +546,12 @@ export default function HomePage() {
               {mounted && [...media, ...media].length > 0
                 ? [...media, ...media].map((item, i) => (
                     <div key={`${item.id}-${i}`} className={styles.marqueeItem}>
-                      {item.url ? (
-                        <img src={item.url} alt={item.title} className={styles.marqueeImg} loading="lazy" />
+                      {item.media_url ? (
+                        item.media_type === 'image' ? (
+                          <img src={item.media_url} alt={item.title} className={styles.marqueeImg} loading="lazy" />
+                        ) : (
+                          <video src={item.media_url} className={styles.marqueeImg} muted loop autoPlay playsInline style={{ objectFit: 'cover', height: '100%', width: '100%' }} />
+                        )
                       ) : (
                         <div
                           className={styles.marqueePlaceholder}
