@@ -317,7 +317,11 @@ export default function ReceiptGenerator() {
             <div className={styles.receiptHeader}>
               <div className={styles.receiptBrand}>
                 <div className={styles.receiptLogoPlaceholder}>
-                  <span style={{ fontSize: '2rem' }}>🌟</span>
+                  <img 
+                    src="/images/little%20star%20logo.png" 
+                    alt="School Logo" 
+                    style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'contain' }} 
+                  />
                 </div>
                 <div className={styles.receiptTitles}>
                   <h1 className={styles.receiptAcademyName}>LITTLE STAR</h1>

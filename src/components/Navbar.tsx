@@ -31,6 +31,10 @@ export default function Navbar() {
     return () => { document.body.style.overflow = ''; };
   }, [menuOpen]);
 
+  if (pathname.startsWith('/admin')) {
+    return null;
+  }
+
   return (
     <nav className={styles.navbar}>
       <div className={styles.navInner}>

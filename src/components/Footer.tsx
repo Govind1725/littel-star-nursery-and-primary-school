@@ -66,6 +66,8 @@ export default function Footer() {
                 {[
                   { href: '/', label: 'Home' },
                   { href: '/about', label: 'About Us' },
+                  { href: '/admission', label: 'Admission' },
+                  { href: '/childcare', label: 'Child Care' },
                   { href: '/gallery', label: 'Gallery' },
                   { href: '/announcements', label: 'Announcements' },
                   { href: '/contact', label: 'Contact' },
