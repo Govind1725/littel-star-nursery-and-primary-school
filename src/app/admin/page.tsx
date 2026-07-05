@@ -475,12 +475,6 @@ export default function AdminPage() {
     try {
       const finalUrl = await uploadToSupabase(file, mediaForm.type);
 
-      // Pre-validation: Title duplicates
-      const titleLower = mediaForm.title.trim().toLowerCase();
-      if (gallery.some((m: any) => m.title.toLowerCase() === titleLower)) {
-        throw new Error('A gallery item with this title already exists');
-      }
-
       // Prepare thumbnail URL (for videos)
       let thumbnailUrl = '';
       if (mediaForm.type === 'video') {
@@ -512,12 +506,6 @@ export default function AdminPage() {
 
     setAnnLoading(true);
     try {
-      // Validate duplicate title
-      const titleLower = annForm.title.trim().toLowerCase();
-      if (announcements.some((a: any) => a.title.toLowerCase() === titleLower)) {
-        throw new Error('An announcement with this title already exists');
-      }
-
       createAnnMutation.mutate({
         title: annForm.title.trim(),
         description: annForm.description.trim(),
@@ -557,12 +545,6 @@ export default function AdminPage() {
 
     setAnnLoading(true);
     try {
-      // Check title duplication excluding current announcement
-      const editTitleLower = editAnnForm.title.trim().toLowerCase();
-      if (announcements.some((a: any) => a.id !== editingAnn.id && a.title.toLowerCase() === editTitleLower)) {
-        throw new Error('Another announcement with this title already exists');
-      }
-
       updateAnnMutation.mutate({
         id: editingAnn.id,
         updates: {
@@ -603,12 +585,6 @@ export default function AdminPage() {
 
     setMediaLoading(true);
     try {
-      // Check title duplication excluding current item
-      const titleLower = editMediaForm.title.trim().toLowerCase();
-      if (gallery.some((m: any) => m.id !== editingMedia.id && m.title.toLowerCase() === titleLower)) {
-        throw new Error('Another gallery item with this title already exists');
-      }
-
       updateGalleryMutation.mutate({
         id: editingMedia.id,
         updates: {
