@@ -1,9 +1,9 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://somcokmysaldtchyknlu.supabase.co';
 
 // Client-side anon key (safe to expose)
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvbWNva215c2FsZHRjaHlrbmx1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMwNTcxNjUsImV4cCI6MjA5ODYzMzE2NX0.wsni-lw2tcYho7idhZSZQovfZaYMmoc-j4pBLipxYhs';
 
 // Server-side key (service_role preferred, falls back to anon)
 const supabaseServerKey = process.env.SUPABASE_SERVICE_ROLE_KEY
