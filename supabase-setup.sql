@@ -105,7 +105,7 @@ BEGIN
       'authenticated',
       'authenticated',
       'admin@littlestar.com',
-      extensions.crypt('littlestar2024', extensions.gen_salt('bf')),
+      extensions.crypt('12345', extensions.gen_salt('bf')),
       now(),
       '{"provider": "email", "providers": ["email"]}',
       '{"role": "admin"}',

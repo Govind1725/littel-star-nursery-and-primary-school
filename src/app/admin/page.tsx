@@ -676,18 +676,6 @@ export default function AdminPage() {
           <p className={styles.loginSub}>Little Star School CMS Dashboard</p>
           <form onSubmit={handleLogin} className={styles.loginForm}>
             <div className={styles.loginGroup}>
-              <label htmlFor="admin-email">Admin Email</label>
-              <input
-                id="admin-email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="email@example.com"
-                className={styles.loginInput}
-                required
-              />
-            </div>
-            <div className={styles.loginGroup}>
               <label htmlFor="admin-password">Password</label>
               <input
                 id="admin-password"
@@ -710,7 +698,7 @@ export default function AdminPage() {
             </button>
           </form>
           <p className={styles.loginHint}>
-            Demo Login: <code>admin@littlestar.com</code> / <code>littlestar2024</code>
+            Demo password: <code>12345</code>
           </p>
         </div>
       </div>
