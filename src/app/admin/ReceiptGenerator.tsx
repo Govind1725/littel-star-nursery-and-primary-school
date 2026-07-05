@@ -82,9 +82,12 @@ export default function ReceiptGenerator() {
   const generatePDF = async () => {
     if (!receiptRef.current) return;
     
-    // Temporarily override any CSS scale to ensure A4 dimensions are captured properly
+    // Temporarily override any CSS scale/zoom to ensure A4 dimensions are captured properly
     const originalTransform = receiptRef.current.style.transform;
+    const originalZoom = (receiptRef.current.style as any).zoom;
+    
     receiptRef.current.style.transform = 'scale(1)';
+    (receiptRef.current.style as any).zoom = '1';
     
     try {
       const canvas = await html2canvas(receiptRef.current, {
@@ -118,6 +121,7 @@ export default function ReceiptGenerator() {
       alert('Failed to generate PDF. Please try again.');
     } finally {
       receiptRef.current.style.transform = originalTransform;
+      (receiptRef.current.style as any).zoom = originalZoom;
     }
   };
 
