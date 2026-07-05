@@ -19,6 +19,7 @@ export default function AdminPage() {
   const [email, setEmail] = useState('admin@littlestar.com');
   const [password, setPassword] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
+  const [authError, setAuthError] = useState('');
 
   const [tab, setTab] = useState<Tab>('media');
   const queryClient = useQueryClient();
@@ -324,6 +325,7 @@ export default function AdminPage() {
     e.preventDefault();
     if (!supabase) return;
     setLoginLoading(true);
+    setAuthError('');
     try {
       const { error } = await supabase.auth.signInWithPassword({
         email,
@@ -332,6 +334,7 @@ export default function AdminPage() {
       if (error) throw error;
       toast.success('Admin login successful!');
     } catch (err: any) {
+      setAuthError(err.message || 'Login failed. Please check credentials.');
       toast.error(err.message || 'Login failed. Please check credentials.');
     } finally {
       setLoginLoading(false);
@@ -697,6 +700,11 @@ export default function AdminPage() {
               {loginLoading ? 'Authenticating...' : 'Sign In'}
             </button>
           </form>
+          {authError && (
+            <div className={styles.authError} style={{ color: '#DC2626', marginTop: '12px', fontSize: '0.85rem', fontWeight: '500', textAlign: 'center' }}>
+              ⚠️ {authError}
+            </div>
+          )}
           <p className={styles.loginHint}>
             Demo password: <code>12345</code>
           </p>
