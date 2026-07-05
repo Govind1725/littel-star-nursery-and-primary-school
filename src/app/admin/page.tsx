@@ -16,10 +16,11 @@ type VisibilityFilter = 'all' | 'active' | 'inactive';
 export default function AdminPage() {
   const [user, setUser] = useState<any>(null);
   const [authLoading, setAuthLoading] = useState(true);
-  const [email, setEmail] = useState('admin@littlestar.com');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
   const [authError, setAuthError] = useState('');
+  const [isSignUpMode, setIsSignUpMode] = useState(false);
 
   const [tab, setTab] = useState<Tab>('media');
   const queryClient = useQueryClient();
@@ -327,15 +328,32 @@ export default function AdminPage() {
     setLoginLoading(true);
     setAuthError('');
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      if (error) throw error;
-      toast.success('Admin login successful!');
+      if (isSignUpMode) {
+        if (password.length < 6) {
+          throw new Error('Password must be at least 6 characters long for security compliance.');
+        }
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+        });
+        if (error) throw error;
+        if (data.session) {
+          toast.success('Admin registered and logged in successfully!');
+        } else {
+          toast.success('Verification email sent! Please check your email inbox to confirm your account.');
+          setAuthError('Please confirm your registration via the email link sent to you, then log in here.');
+        }
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (error) throw error;
+        toast.success('Admin login successful!');
+      }
     } catch (err: any) {
-      setAuthError(err.message || 'Login failed. Please check credentials.');
-      toast.error(err.message || 'Login failed. Please check credentials.');
+      setAuthError(err.message || 'Authentication action failed.');
+      toast.error(err.message || 'Authentication action failed.');
     } finally {
       setLoginLoading(false);
     }
@@ -675,9 +693,25 @@ export default function AdminPage() {
       <div className={styles.loginPage}>
         <div className={styles.loginBox}>
           <div className={styles.loginLogo}></div>
-          <h1 className={styles.loginTitle}>Admin Portal Login</h1>
+          <h1 className={styles.loginTitle}>
+            {isSignUpMode ? 'Register Admin Account' : 'Admin Portal Login'}
+          </h1>
           <p className={styles.loginSub}>Little Star School CMS Dashboard</p>
+          
           <form onSubmit={handleLogin} className={styles.loginForm}>
+            <div className={styles.loginGroup}>
+              <label htmlFor="admin-email">Email Address</label>
+              <input
+                id="admin-email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="your-email@example.com"
+                className={styles.loginInput}
+                required
+              />
+            </div>
+            
             <div className={styles.loginGroup}>
               <label htmlFor="admin-password">Password</label>
               <input
@@ -685,28 +719,41 @@ export default function AdminPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter password"
+                placeholder="Minimum 6 characters"
                 className={styles.loginInput}
                 required
                 autoFocus
               />
             </div>
+            
             <button
               type="submit"
               className={`btn-primary ${styles.loginBtn}`}
               id="admin-login-btn"
               disabled={loginLoading}
             >
-              {loginLoading ? 'Authenticating...' : 'Sign In'}
+              {loginLoading ? 'Processing...' : (isSignUpMode ? 'Register' : 'Sign In')}
             </button>
           </form>
+
           {authError && (
             <div className={styles.authError} style={{ color: '#DC2626', marginTop: '12px', fontSize: '0.85rem', fontWeight: '500', textAlign: 'center' }}>
               ⚠️ {authError}
             </div>
           )}
-          <p className={styles.loginHint}>
-            Demo password: <code>12345</code>
+
+          <div style={{ textAlign: 'center', marginTop: '15px', fontSize: '0.85rem' }}>
+            <button 
+              type="button" 
+              onClick={() => { setIsSignUpMode(!isSignUpMode); setAuthError(''); }}
+              style={{ color: 'var(--violet)', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 'bold', textDecoration: 'underline' }}
+            >
+              {isSignUpMode ? 'Already have an account? Sign In' : 'Create new admin account'}
+            </button>
+          </div>
+
+          <p className={styles.loginHint} style={{ marginTop: '15px' }}>
+            Password policy requires at least <strong>6 characters</strong> (e.g. <code>123456</code>).
           </p>
         </div>
       </div>
