@@ -465,18 +465,15 @@ export default function AdminPage() {
 
     const fileInput = fileInputRef.current;
     const file = fileInput?.files?.[0];
-    let finalUrl = mediaForm.url.trim();
 
-    if (!file && !finalUrl) {
-      toast.error('Please select a file to upload or enter a URL');
+    if (!file) {
+      toast.error('Please select a file to upload');
       return;
     }
 
     setMediaLoading(true);
     try {
-      if (file) {
-        finalUrl = await uploadToSupabase(file, mediaForm.type);
-      }
+      const finalUrl = await uploadToSupabase(file, mediaForm.type);
 
       // Pre-validation: Title duplicates
       const titleLower = mediaForm.title.trim().toLowerCase();
@@ -496,8 +493,8 @@ export default function AdminPage() {
         media_type: mediaForm.type,
         media_url: finalUrl,
         thumbnail_url: thumbnailUrl,
-        is_active: mediaForm.is_active,
-        display_order: Number(mediaForm.display_order) || 0,
+        is_active: true, // Always make visible on live website
+        display_order: 0, // Default display order
       });
     } catch (err: any) {
       toast.error(err.message || 'An error occurred during media creation');
@@ -844,33 +841,6 @@ export default function AdminPage() {
                     />
                   </div>
 
-                  <div className={styles.formGroup}>
-                    <label htmlFor="media-url">Or Paste Direct CDN/Storage URL</label>
-                    <input
-                      id="media-url"
-                      type="url"
-                      placeholder="e.g., https://example.com/file.jpg"
-                      value={mediaForm.url}
-                      onChange={(e) => {
-                        setMediaForm((p) => ({ ...p, url: e.target.value }));
-                        setPreviewUrlSafe('');
-                        if (fileInputRef.current) fileInputRef.current.value = '';
-                      }}
-                      className={styles.input}
-                    />
-                  </div>
-
-                  <div className={styles.formGroup}>
-                    <label htmlFor="media-order">Display Sequence Order</label>
-                    <input
-                      id="media-order"
-                      type="number"
-                      value={mediaForm.display_order}
-                      onChange={(e) => setMediaForm((p) => ({ ...p, display_order: parseInt(e.target.value) || 0 }))}
-                      className={styles.input}
-                    />
-                  </div>
-
                   <div className={`${styles.formGroup} ${styles.fullWidth}`}>
                     <label htmlFor="media-desc">Brief Description (optional)</label>
                     <input
@@ -881,17 +851,6 @@ export default function AdminPage() {
                       onChange={(e) => setMediaForm((p) => ({ ...p, description: e.target.value }))}
                       className={styles.input}
                     />
-                  </div>
-
-                  <div className={styles.formGroup}>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-                      <input
-                        type="checkbox"
-                        checked={mediaForm.is_active}
-                        onChange={(e) => setMediaForm((p) => ({ ...p, is_active: e.target.checked }))}
-                      />
-                      Make Visible on Live Website
-                    </label>
                   </div>
                 </div>
 
@@ -1370,17 +1329,6 @@ export default function AdminPage() {
                   />
                 </div>
 
-                <div className={styles.formGroup}>
-                  <label htmlFor="edit-media-order">Display Sequence Order</label>
-                  <input
-                    id="edit-media-order"
-                    type="number"
-                    value={editMediaForm.display_order}
-                    onChange={(e) => setEditMediaForm((p) => ({ ...p, display_order: parseInt(e.target.value) || 0 }))}
-                    className={styles.input}
-                  />
-                </div>
-
                 <div className={`${styles.formGroup} ${styles.fullWidth}`}>
                   <label htmlFor="edit-media-desc">Description (optional)</label>
                   <input
@@ -1390,17 +1338,6 @@ export default function AdminPage() {
                     onChange={(e) => setEditMediaForm((p) => ({ ...p, description: e.target.value }))}
                     className={styles.input}
                   />
-                </div>
-
-                <div className={styles.formGroup}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-                    <input
-                      type="checkbox"
-                      checked={editMediaForm.is_active}
-                      onChange={(e) => setEditMediaForm((p) => ({ ...p, is_active: e.target.checked }))}
-                    />
-                    Make Visible on Live Website
-                  </label>
                 </div>
               </div>
 
