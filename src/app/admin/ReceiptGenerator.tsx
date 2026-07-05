@@ -329,7 +329,8 @@ export default function ReceiptGenerator() {
                 </div>
                 <div className={styles.receiptTitles}>
                   <h1 className={styles.receiptAcademyName}>LITTLE STAR</h1>
-                  <p className={styles.receiptTagline}>Nursery & Primary School | STAR KIDS Pre-School & Day Care</p>
+                  <p className={styles.receiptTagline}>Nursery &amp; Primary School</p>
+                  <p className={styles.receiptTaglineSub}>STAR KIDS Pre-School &amp; Day Care</p>
                 </div>
               </div>
               <div className={styles.receiptTitleBox}>

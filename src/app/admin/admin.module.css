@@ -993,16 +993,19 @@ input:checked + .toggleSlider:before {
 }
 
 .receiptAcademyName {
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: 800;
-  margin: 0 0 4px 0;
+  margin: 0;
   letter-spacing: -0.5px;
+  line-height: 1.2;
 }
 
-.receiptTagline {
+.receiptTagline,
+.receiptTaglineSub {
   font-size: 0.95rem;
   opacity: 0.9;
-  margin: 0;
+  margin: 4px 0 0 0;
+  line-height: 1.3;
 }
 
 .receiptTitleBox {
