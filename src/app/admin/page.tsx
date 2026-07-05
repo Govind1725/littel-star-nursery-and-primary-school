@@ -83,6 +83,7 @@ export default function AdminPage() {
   // Track user session
   useEffect(() => {
     if (!supabase) {
+      setAuthError('Supabase environment variables (NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY) are not configured. Please set them in your Vercel project settings.');
       setAuthLoading(false);
       return;
     }
@@ -323,7 +324,12 @@ export default function AdminPage() {
   // --- AUTH HANDLERS ---
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
-    if (!supabase) return;
+    if (!supabase) {
+      const errMsg = 'Supabase environment variables are missing. Please add them in your Vercel project settings.';
+      setAuthError(errMsg);
+      toast.error(errMsg);
+      return;
+    }
     setLoginLoading(true);
     setAuthError('');
     try {
