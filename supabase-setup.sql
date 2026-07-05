@@ -70,15 +70,23 @@ CREATE POLICY "Allow authenticated admin to manage uploads" ON storage.objects
 
 -- 5. ENABLE REALTIME SYNC
 -- Add tables to the supabase_realtime publication to enable subscriptions
-BEGIN;
-  -- Remove them first to prevent duplicate errors
-  ALTER PUBLICATION supabase_realtime DROP TABLE IF EXISTS public.gallery;
-  ALTER PUBLICATION supabase_realtime DROP TABLE IF EXISTS public.announcements;
-  
-  -- Add them
-  ALTER PUBLICATION supabase_realtime ADD TABLE public.gallery;
-  ALTER PUBLICATION supabase_realtime ADD TABLE public.announcements;
-COMMIT;
+-- Check if tables are already in the publication to prevent duplicate errors
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_publication_tables 
+    WHERE pubname = 'supabase_realtime' AND schemaname = 'public' AND tablename = 'gallery'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.gallery;
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_publication_tables 
+    WHERE pubname = 'supabase_realtime' AND schemaname = 'public' AND tablename = 'announcements'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.announcements;
+  END IF;
+END $$;
 
 -- 6. CREATE ADMIN USER
 -- Creates an admin user in auth.users with email 'admin@littlestar.com' and password 'littlestar2024'
