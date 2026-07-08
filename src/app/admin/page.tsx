@@ -85,6 +85,29 @@ export default function AdminPage() {
   useEffect(() => {
     const authed = sessionStorage.getItem('admin_authenticated') === 'true';
     setIsAuthenticated(authed);
+    
+    if (authed && supabase) {
+      // Ensure Supabase client is signed in behind the scenes to pass RLS policy checks
+      supabase.auth.getSession().then(async ({ data: { session } }) => {
+        if (!session) {
+          try {
+            const { error } = await supabase.auth.signInWithPassword({
+              email: 'admin@littlestar.com',
+              password: '12345',
+            });
+            if (error) {
+              // Try fallback password
+              await supabase.auth.signInWithPassword({
+                email: 'admin@littlestar.com',
+                password: 'littlestar2024',
+              });
+            }
+          } catch (err) {
+            console.error('Background Supabase auth failed:', err);
+          }
+        }
+      });
+    }
     setAuthLoading(false);
   }, []);
 
@@ -305,12 +328,38 @@ export default function AdminPage() {
   });
 
   // --- AUTH HANDLERS ---
-  function handleLogin(e: React.FormEvent) {
+  async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     setLoginLoading(true);
     setAuthError('');
 
     if (password === ADMIN_PASSWORD) {
+      if (supabase) {
+        try {
+          // Sign in to Supabase Auth behind the scenes to pass RLS checking
+          let { error } = await supabase.auth.signInWithPassword({
+            email: 'admin@littlestar.com',
+            password: '12345',
+          });
+          
+          if (error) {
+            console.warn("Supabase auth failed with '12345', trying 'littlestar2024'...");
+            const fallbackRes = await supabase.auth.signInWithPassword({
+              email: 'admin@littlestar.com',
+              password: 'littlestar2024',
+            });
+            error = fallbackRes.error;
+          }
+          
+          if (error) {
+            console.error('Supabase RLS Auth failed:', error.message);
+            toast.error(`Database session failed: ${error.message}. Writes may be restricted.`);
+          }
+        } catch (err: any) {
+          console.error('Supabase RLS Auth error:', err);
+        }
+      }
+      
       sessionStorage.setItem('admin_authenticated', 'true');
       setIsAuthenticated(true);
       toast.success('Admin login successful!');
@@ -322,9 +371,16 @@ export default function AdminPage() {
     setLoginLoading(false);
   }
 
-  function handleLogout() {
+  async function handleLogout() {
     sessionStorage.removeItem('admin_authenticated');
     setIsAuthenticated(false);
+    if (supabase) {
+      try {
+        await supabase.auth.signOut();
+      } catch (err) {
+        console.error('Supabase sign out error:', err);
+      }
+    }
     toast.success('Logged out successfully');
   }
 

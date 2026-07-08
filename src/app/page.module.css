@@ -165,8 +165,8 @@
   gap: 8px;
   border: 1.5px solid var(--yellow);
   border-radius: var(--radius-full);
-  padding: 8px 24px;
-  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  padding: 10px 28px;
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
   font-weight: 700;
   color: var(--yellow);
   margin-top: 16px;
@@ -215,6 +215,11 @@
   gap: 16px;
   flex-wrap: wrap;
   justify-content: center;
+}
+
+.heroBtns a {
+  font-size: 1.15rem;
+  padding: 16px 38px;
 }
 
 .heroStats {

@@ -37,9 +37,9 @@ const programs = [
   {
     img: '/images/program_prek.png',
     age: '4.5 – 5.5 Years',
-    badge: 'Pre-KG',
+    badge: 'UKG',
     icon: Backpack,
-    title: 'Pre-KG / UKG',
+    title: 'UKG',
     desc: 'Preparing confident learners for primary school with literacy, numeracy, and critical thinking skills.',
     color: 'linear-gradient(135deg,#4C1D95,#6D28D9)',
   },
