@@ -110,7 +110,7 @@ export default function GalleryPage() {
                       </div>
                     )}
                     <div className={styles.mediaOverlay}>
-                      <span className={styles.overlayIcon}>{item.media_type === 'image' ? '🔍' : '▶️'}</span>
+                      <span className={styles.overlayIcon}>{item.media_type === 'image' ? 'View' : 'Play'}</span>
                     </div>
                     {item.media_type === 'video' && (
                       <div className={styles.videoTag}>🎬 Video</div>

@@ -151,6 +151,7 @@ export default function ReceiptGenerator() {
                 className={styles.input} 
                 value={gstRate} 
                 onChange={(e) => setGstRate(Number(e.target.value))} 
+                autoComplete="off"
               />
             </div>
           )}
@@ -249,13 +250,14 @@ export default function ReceiptGenerator() {
                 </div>
                 <div className={styles.itemColPrice}>
                   <label>Price</label>
-                  <input 
-                    type="number" 
-                    className={styles.input} 
-                    value={item.price} 
-                    onChange={(e) => handleItemChange(item.id, 'price', Number(e.target.value))} 
-                    min="0"
-                  />
+                    <input 
+                      type="number" 
+                      className={styles.input} 
+                      value={item.price} 
+                      onChange={(e) => handleItemChange(item.id, 'price', Number(e.target.value))} 
+                      min="0"
+                      autoComplete="off"
+                    />
                 </div>
                 <div className={styles.itemColAmount}>
                   <label>Amount</label>
@@ -287,6 +289,7 @@ export default function ReceiptGenerator() {
               value={discount} 
               onChange={(e) => setDiscount(Number(e.target.value))} 
               min="0"
+              autoComplete="off"
             />
           </div>
         </div>
@@ -300,6 +303,7 @@ export default function ReceiptGenerator() {
               value={notes} 
               onChange={(e) => setNotes(e.target.value)} 
               rows={2}
+              autoComplete="off"
             />
           </div>
         </div>

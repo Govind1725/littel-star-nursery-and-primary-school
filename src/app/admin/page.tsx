@@ -13,11 +13,12 @@ type Tab = 'media' | 'announcements' | 'receipts';
 type MediaFilter = 'all' | 'image' | 'video';
 type VisibilityFilter = 'all' | 'active' | 'inactive';
 
+const ADMIN_PASSWORD = 'littlestarnp123';
+
 export default function AdminPage() {
-  const [user, setUser] = useState<any>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
-  const [email, setEmail] = useState('admin@littlestar.com');
-  const [password, setPassword] = useState('12345');
+  const [password, setPassword] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
   const [authError, setAuthError] = useState('');
 
@@ -80,29 +81,11 @@ export default function AdminPage() {
     is_active: true,
   });
 
-  // Track user session
+  // Check session on mount
   useEffect(() => {
-    if (!supabase) {
-      setAuthError('Supabase environment variables (NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY) are not configured. Please set them in your Vercel project settings.');
-      setAuthLoading(false);
-      return;
-    }
-    
-    // Check initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      setAuthLoading(false);
-    });
-
-    // Listen to changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-      setAuthLoading(false);
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
+    const authed = sessionStorage.getItem('admin_authenticated') === 'true';
+    setIsAuthenticated(authed);
+    setAuthLoading(false);
   }, []);
 
   // Cleanup object URL previews to prevent memory leak
@@ -139,7 +122,7 @@ export default function AdminPage() {
       if (error) throw error;
       return data || [];
     },
-    enabled: !!user,
+    enabled: !!isAuthenticated,
   });
 
   const { data: gallery = [], isLoading: isGalleryLoading } = useQuery({
@@ -154,7 +137,7 @@ export default function AdminPage() {
       if (error) throw error;
       return data || [];
     },
-    enabled: !!user,
+    enabled: !!isAuthenticated,
   });
 
   // --- MUTATION HOOKS (ANNOUNCEMENTS) ---
@@ -322,40 +305,27 @@ export default function AdminPage() {
   });
 
   // --- AUTH HANDLERS ---
-  async function handleLogin(e: React.FormEvent) {
+  function handleLogin(e: React.FormEvent) {
     e.preventDefault();
-    if (!supabase) {
-      const errMsg = 'Supabase environment variables are missing. Please add them in your Vercel project settings.';
-      setAuthError(errMsg);
-      toast.error(errMsg);
-      return;
-    }
     setLoginLoading(true);
     setAuthError('');
-    try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      if (error) throw error;
+
+    if (password === ADMIN_PASSWORD) {
+      sessionStorage.setItem('admin_authenticated', 'true');
+      setIsAuthenticated(true);
       toast.success('Admin login successful!');
-    } catch (err: any) {
-      setAuthError(err.message || 'Login failed. Please check credentials.');
-      toast.error(err.message || 'Login failed. Please check credentials.');
-    } finally {
-      setLoginLoading(false);
+    } else {
+      setAuthError('Incorrect password. Please try again.');
+      toast.error('Incorrect password. Please try again.');
     }
+
+    setLoginLoading(false);
   }
 
-  async function handleLogout() {
-    if (!supabase) return;
-    try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-      toast.success('Logged out successfully');
-    } catch (err: any) {
-      toast.error('Failed to logout');
-    }
+  function handleLogout() {
+    sessionStorage.removeItem('admin_authenticated');
+    setIsAuthenticated(false);
+    toast.success('Logged out successfully');
   }
 
   // --- FILE COMPRESSION & UPLOAD ---
@@ -649,7 +619,7 @@ export default function AdminPage() {
   }
 
   // LOGIN SCREEN
-  if (!user) {
+  if (!isAuthenticated) {
     return (
       <div className={styles.loginPage}>
         <div className={styles.loginBox}>
@@ -658,6 +628,18 @@ export default function AdminPage() {
           <p className={styles.loginSub}>Little Star School CMS Dashboard</p>
           
           <form onSubmit={handleLogin} className={styles.loginForm} style={{ marginTop: '20px' }}>
+            <div className={styles.loginGroup}>
+              <label htmlFor="admin-password">Password</label>
+              <input
+                id="admin-password"
+                type="password"
+                placeholder="Enter admin password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className={styles.loginInput}
+                autoFocus
+              />
+            </div>
             <button
               type="submit"
               className={`btn-primary ${styles.loginBtn}`}
@@ -763,7 +745,7 @@ export default function AdminPage() {
             {/* Create Media Item Panel */}
             <div className={styles.panel}>
               <h2 className={styles.panelTitle}>Upload New Media</h2>
-              <form onSubmit={handleAddMedia} className={styles.mediaForm}>
+              <form onSubmit={handleAddMedia} className={styles.mediaForm} autoComplete="off">
                 <div className={styles.typeToggle}>
                   <button
                     type="button"
@@ -793,6 +775,7 @@ export default function AdminPage() {
                       value={mediaForm.title}
                       onChange={(e) => setMediaForm((p) => ({ ...p, title: e.target.value }))}
                       className={styles.input}
+                      autoComplete="off"
                       required
                     />
                   </div>
@@ -826,6 +809,7 @@ export default function AdminPage() {
                       value={mediaForm.description}
                       onChange={(e) => setMediaForm((p) => ({ ...p, description: e.target.value }))}
                       className={styles.input}
+                      autoComplete="off"
                     />
                   </div>
                 </div>
@@ -977,7 +961,7 @@ export default function AdminPage() {
             {/* Create Announcement Panel */}
             <div className={styles.panel}>
               <h2 className={styles.panelTitle}>Publish New Announcement</h2>
-              <form onSubmit={handleAddAnnouncement} className={styles.annForm}>
+              <form onSubmit={handleAddAnnouncement} className={styles.annForm} autoComplete="off">
                 <div className={styles.formGrid}>
                   <div className={`${styles.formGroup} ${styles.fullWidth}`}>
                     <label htmlFor="ann-title">Title *</label>
@@ -988,6 +972,7 @@ export default function AdminPage() {
                       value={annForm.title}
                       onChange={(e) => setAnnForm((p) => ({ ...p, title: e.target.value }))}
                       className={styles.input}
+                      autoComplete="off"
                       required
                     />
                   </div>
