@@ -91,13 +91,13 @@ export default function AdminPage() {
       supabase.auth.getSession().then(async ({ data: { session } }) => {
         if (!session) {
           try {
-            const { error } = await supabase.auth.signInWithPassword({
+            const { error } = await supabase!.auth.signInWithPassword({
               email: 'admin@littlestar.com',
               password: '12345',
             });
             if (error) {
               // Try fallback password
-              await supabase.auth.signInWithPassword({
+              await supabase!.auth.signInWithPassword({
                 email: 'admin@littlestar.com',
                 password: 'littlestar2024',
               });
