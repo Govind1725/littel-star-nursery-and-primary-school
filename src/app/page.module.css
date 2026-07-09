@@ -79,6 +79,52 @@
   50% { transform: translateY(-20px); }
 }
 
+/* ===== ADMISSION STRIP ===== */
+.admissionStrip {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  padding: 16px 0;
+}
+
+.admissionStripInner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  flex-wrap: wrap;
+  text-align: center;
+}
+
+.admissionStripDot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #22c55e;
+  animation: pulse 2s infinite;
+}
+
+.admissionStripBtn {
+  display: inline-block;
+  background: #fff;
+  color: #dc2626;
+  padding: 10px 28px;
+  border-radius: var(--radius-full);
+  font-weight: 800;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: var(--transition-base);
+}
+
+.admissionStripBtn:hover {
+  background: #fef2f2;
+  transform: scale(1.05);
+}
+
 .heroContent {
   position: relative;
   z-index: 2;

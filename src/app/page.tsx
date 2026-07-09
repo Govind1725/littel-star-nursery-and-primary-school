@@ -272,6 +272,17 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ===== ADMISSION OPEN ===== */}
+      <section className={styles.admissionStrip}>
+        <div className="container">
+          <div className={styles.admissionStripInner}>
+            <span className={styles.admissionStripDot} />
+            <span>ADMISSIONS OPEN 2026-27</span>
+            <Link href="/admission" className={styles.admissionStripBtn}>Enroll Now →</Link>
+          </div>
+        </div>
+      </section>
+
       {/* ===== ANNOUNCEMENTS ===== */}
       <section className={`section-padding ${styles.announcementsSection}`}>
         <div className="container">
