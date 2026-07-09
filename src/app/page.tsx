@@ -113,7 +113,7 @@ export default function HomePage() {
   const [counted, setCounted] = useState<Set<number>>(new Set());
   const [counts, setCounts] = useState<number[]>([0, 0, 0, 0]);
   const statsRef = useRef<HTMLElement>(null);
-  const [form, setForm] = useState({ name: '', email: '', phone: '', subject: '', message: '' });
+  const [form, setForm] = useState({ name: '', dob: '', email: '', phone: '', subject: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -224,13 +224,12 @@ export default function HomePage() {
           <div className={styles.decoSparkle} style={{ bottom: '20%', left: '25%' }}>✦</div>
         </div>
 
-        <div className={`container ${styles.heroContent}`}>
-          <div className={styles.heroBadge}>
-            <span className={styles.badgeDot} />
-            ADMISSIONS OPEN 2026-27
-          </div>
-
+          <div className={`container ${styles.heroContent}`}>
           <div className={styles.heroTitleWrapper}>
+            <div className={styles.heroBadge}>
+              <span className={styles.badgeDot} />
+              ADMISSIONS OPEN 2026-27
+            </div>
             <div className={styles.heroWelcome}>Welcome to</div>
             <h1 className={styles.heroMainTitle}>LITTLE STAR</h1>
             <div className={styles.heroSubTitle}>Nursery &amp; Primary School</div>
@@ -239,6 +238,12 @@ export default function HomePage() {
             </div>
             <div className={styles.heroDaycareHours}>
               Day care Available from 8:30 am to 8 pm.
+            </div>
+            <div className={styles.heroBottomBadge} style={{ marginTop: '24px' }}>
+              <span className={styles.starIcon}>★</span> Star Tuition Centre
+            </div>
+            <div className={styles.heroDaycareHours} style={{ marginTop: '12px' }}>
+              Tuitions for all school children I STD to 12 STD, CBSE Maths (6 pm. to 8 pm)
             </div>
           </div>
 
@@ -715,7 +720,7 @@ export default function HomePage() {
                   <p>Thank you for reaching out! We&apos;ll get back to you within 24 hours.</p>
                   <button
                     className="btn-primary"
-                    onClick={() => { setSubmitted(false); setForm({ name: '', email: '', phone: '', subject: '', message: '' }); }}
+                    onClick={() => { setSubmitted(false); setForm({ name: '', dob: '', email: '', phone: '', subject: '', message: '' }); }}
                     id="home-contact-send-another-btn"
                   >
                     Send Another Message
@@ -726,11 +731,19 @@ export default function HomePage() {
                   <h3 className={styles.formTitle}>Send us a Message ✉️</h3>
                   <div className={styles.formRow}>
                     <div className={styles.formGroup}>
-                      <label htmlFor="home-name">Full Name *</label>
+                      <label htmlFor="home-name">Student Name *</label>
                       <input
                         id="home-name" name="name" type="text"
-                        placeholder="Your full name"
+                        placeholder="Student's full name"
                         value={form.name} onChange={handleChange}
+                        required className={styles.input}
+                      />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label htmlFor="home-dob">Date of Birth *</label>
+                      <input
+                        id="home-dob" name="dob" type="date"
+                        value={form.dob} onChange={handleChange}
                         required className={styles.input}
                       />
                     </div>

@@ -89,32 +89,39 @@ export default function ChildCarePage() {
         </div>
       </section>
 
-      {/* ===== MEAL PLAN & NUTRITION ===== */}
+      {/* ===== HEALTHY SNACK CHART ===== */}
       <section className={`section-padding ${styles.mealSection}`}>
         <div className="container">
           <div className={styles.splitLayout}>
             <div className={styles.splitText}>
-              <span className="badge">Nutrition First</span>
-              <h2 className="section-title">Daily Meal Plan</h2>
-              <p>We provide wholesome, balanced meals to keep your little ones energetic throughout the day.</p>
-              
-              <div className={styles.mealCards}>
-                <div className={styles.mealCard}>
-                  <h4>Breakfast</h4>
-                  <p>Oats, fresh fruits, idli, or poha.</p>
-                </div>
-                <div className={styles.mealCard}>
-                  <h4>Lunch</h4>
-                  <p>Rice/roti, dal, seasonal vegetables, and curd.</p>
-                </div>
-                <div className={styles.mealCard}>
-                  <h4>Snacks</h4>
-                  <p>Healthy sprouts, fruit salads, or milk.</p>
-                </div>
+              <h2 className="section-title" style={{fontSize: 'clamp(1.8rem, 4vw, 2.8rem)'}}>LITTLE STAR NURSERY AND PRIMARY SCHOOL</h2>
+              <p style={{fontSize: '1.1rem', marginBottom: '24px', fontWeight: 600}}>NERKUNDRAM, CHENNAI – 600107</p>
+
+              <h3 style={{fontSize: '1.5rem', fontWeight: 700, marginBottom: '16px', color: '#000'}}>HEALTHY SNACK CHART</h3>
+
+              <div className={styles.tableWrap}>
+                <table className={styles.snackTable}>
+                  <thead>
+                    <tr>
+                      <th>DAY</th>
+                      <th>OPTION - 1<br /><small>(NUTS / GRAIN & PROTEIN)</small></th>
+                      <th>OPTION - 2<br /><small>(FRESH FRUITS & VEGGIES)</small></th>
+                      <th>OPTION 3<br /><small>(PROTEIN BOOST)</small></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Monday</td><td>Mixed Nuts (Almonds, Walnuts & cashews)</td><td>Fresh Apple slices / Carrot slices</td><td>Roasted chickpeas or boiled sweet corn</td></tr>
+                    <tr><td>Tuesday</td><td>Mini veg or paneer sandwich on whole-wheat bread</td><td>Sliced watermelon, grapes, or mixed berries</td><td>Roasted/boiled peanuts or mixed roasted nuts</td></tr>
+                    <tr><td>Wednesday</td><td>Roasted chickpeas or Roasted peanuts</td><td>Banana with a small handful of raisins</td><td>Nuts bar / Dates</td></tr>
+                    <tr><td>Thursday</td><td>Boiled green gram / green gram sprouts</td><td>Mixed fruit salad / Cucumber slices</td><td>Hard boiled egg - 1</td></tr>
+                    <tr><td>Friday</td><td>Home made veg rolls</td><td>Orange wedges / Pineapple slices</td><td>Sprouts salad.</td></tr>
+                  </tbody>
+                </table>
               </div>
-            </div>
-            <div className={styles.splitImage}>
-              <img src="/images/meal_plan.png" alt="Healthy Preschool Meal" className={styles.photo} />
+
+              <div className={styles.noteBox}>
+                <strong>Note :</strong> As part of our commitment to your child's well-being and academic focus, we kindly request your support in packing nutritious, home-cooked snacks for school. We actively discourage highly processed items like chips, biscuits, and chocolates, as they can cause energy crashes and affect concentration. Instead, we encourage you to pack brain-boosting, energy-rich alternatives.
+              </div>
             </div>
           </div>
         </div>
@@ -126,11 +133,11 @@ export default function ChildCarePage() {
           <div className={styles.splitLayoutReverse}>
             <div className={styles.splitText}>
               <span className="badge">Get Ready</span>
-              <h2 className="section-title">Dress Code & Essentials</h2>
+              <h2 className="section-title">UKG / Nursery</h2>
               <p>Comfort is key. Our uniform is designed to be vibrant and play-friendly.</p>
               
               <ul className={styles.checklist}>
-                <li><strong>Uniform:</strong> Yellow t-shirt & Violet bottoms.</li>
+                <li><strong>Uniform:</strong> Red t-shirt & Navy blue bottom.</li>
                 <li><strong>Footwear:</strong> Comfortable velcro shoes & socks.</li>
                 <li><strong>What to Bring:</strong>
                   <ul>
@@ -143,23 +150,61 @@ export default function ChildCarePage() {
               </ul>
             </div>
             <div className={styles.splitImage}>
-              <img src="/images/dress_code.png" alt="Preschool Dress Code" className={styles.photo} />
+              <img src="/images/kg school.png" alt="UKG / Nursery Dress Code" className={styles.photo} />
             </div>
           </div>
         </div>
       </section>
 
-      {/* ===== HEALTH, SAFETY & TRANSPORT ===== */}
+      {/* ===== PRIMARY SCHOOL ===== */}
+      <section className={`section-padding ${styles.dressSection}`}>
+        <div className="container">
+          <div className={styles.splitLayoutReverse}>
+            <div className={styles.splitText}>
+              <span className="badge">Get Ready</span>
+              <h2 className="section-title">Primary School</h2>
+              <p>Comfort is key. Our uniform is designed to be vibrant and play-friendly.</p>
+              
+              <ul className={styles.checklist}>
+                <li>
+                  <strong>👦 Boy</strong>
+                  <ul style={{ marginTop: '6px', listStyle: 'none', paddingLeft: 0 }}>
+                    <li><strong>Top:</strong> Short Sleeve Striped School Shirt - Light Pink & White Vertical Striped Shirt</li>
+                    <li><strong>Bottom:</strong> Grey School Shorts - Mid Grey Uniform Shorts</li>
+                  </ul>
+                </li>
+                <li style={{ marginTop: '12px' }}>
+                  <strong>👧 Girl</strong>
+                  <ul style={{ marginTop: '6px', listStyle: 'none', paddingLeft: 0 }}>
+                    <li><strong>Top:</strong> Short Sleeve Striped School Shirt - Light Pink & White Vertical Striped Shirt</li>
+                    <li><strong>Bottom:</strong> Pleated Grey Pinafore</li>
+                  </ul>
+                </li>
+                <li><strong>Footwear:</strong> Comfortable velcro shoes & socks.</li>
+                <li><strong>What to Bring:</strong>
+                  <ul>
+                    <li>Water bottle (labeled)</li>
+                    <li>Extra pair of clothes</li>
+                    <li>Lunch box (if opting out of school meals)</li>
+                    <li>School diary</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+            <div className={styles.splitImage}>
+              <img src="/images/primary school.png" alt="Primary School Dress Code" className={styles.photo} />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== HEALTH & SAFETY ===== */}
       <section className={`section-padding ${styles.safetySection}`}>
         <div className="container">
           <div className={styles.gridCards}>
             <div className={styles.card}>
               <h3>Health & Safety</h3>
               <p>Regular health checks, strict hygiene practices, and immediate emergency contact protocols. Medication is only administered with strict parental consent.</p>
-            </div>
-            <div className={styles.card}>
-              <h3>Transport Information</h3>
-              <p>Safe pickup and drop-off timings with verified drivers. Strict parent authorization rules apply for any alternate pickups.</p>
             </div>
             <div className={styles.card}>
               <h3>Daily Updates</h3>

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import styles from './contact.module.css';
 
 export default function ContactPage() {
-  const [form, setForm] = useState({ name: '', email: '', phone: '', subject: '', message: '' });
+  const [form, setForm] = useState({ name: '', dob: '', email: '', phone: '', subject: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -87,7 +87,7 @@ export default function ContactPage() {
                   <p>Thank you for reaching out! We&apos;ll get back to you within 24 hours.</p>
                   <button
                     className="btn-primary"
-                    onClick={() => { setSubmitted(false); setForm({ name: '', email: '', phone: '', subject: '', message: '' }); }}
+                    onClick={() => { setSubmitted(false); setForm({ name: '', dob: '', email: '', phone: '', subject: '', message: '' }); }}
                     id="contact-send-another-btn"
                   >
                     Send Another Message
@@ -98,11 +98,19 @@ export default function ContactPage() {
                   <h3 className={styles.formTitle}>Send us a Message ✉️</h3>
                   <div className={styles.formRow}>
                     <div className={styles.formGroup}>
-                      <label htmlFor="name">Full Name *</label>
+                      <label htmlFor="name">Student Name *</label>
                       <input
                         id="name" name="name" type="text"
-                        placeholder="Your full name"
+                        placeholder="Student's full name"
                         value={form.name} onChange={handleChange}
+                        required className={styles.input}
+                      />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label htmlFor="dob">Date of Birth *</label>
+                      <input
+                        id="dob" name="dob" type="date"
+                        value={form.dob} onChange={handleChange}
                         required className={styles.input}
                       />
                     </div>
