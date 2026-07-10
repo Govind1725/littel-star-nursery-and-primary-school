@@ -234,13 +234,13 @@ export default function HomePage() {
             <h1 className={styles.heroMainTitle}>LITTLE STAR</h1>
             <div className={styles.heroSubTitle}>Nursery &amp; Primary School</div>
             <div className={styles.heroBottomBadge}>
-              <span className={styles.starIcon}>★</span> STAR KIDS Pre-School &amp; Day Care
+              <span className={styles.starIcon}>★</span> STAR KIDS Pre-School &amp; Day Care <span className={styles.starIcon}>★</span>
             </div>
             <div className={styles.heroDaycareHours}>
               Day care Available from 8:30 am to 8 pm.
             </div>
             <div className={styles.heroBottomBadge} style={{ marginTop: '24px' }}>
-              <span className={styles.starIcon}>★</span> Star Tuition Centre
+              <span className={styles.starIcon}>★</span> Star Tuition Centre <span className={styles.starIcon}>★</span>
             </div>
             <div className={styles.heroDaycareHours} style={{ marginTop: '12px' }}>
               Tuitions for all school children I STD to 12 STD, CBSE Maths (6 pm. to 8 pm)
@@ -384,6 +384,57 @@ export default function HomePage() {
                 Discover More &rarr;
               </Link>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== GALLERY PREVIEW ===== */}
+      <section className={`section-padding ${styles.gallery}`}>
+        <div className="container">
+          <div className="text-center">
+            <span className="badge"><Camera size={16} style={{display: 'inline', marginRight: '4px'}} /> School Life</span>
+            <h2 className="section-title">Moments at Little Star</h2>
+            <p className="section-subtitle">
+              Capturing the joy, learning, and friendships that make every day special.
+            </p>
+          </div>
+          <div className={styles.marqueeWrap}>
+            <div className={styles.marqueeTrack}>
+              {mounted && [...media, ...media].length > 0
+                ? [...media, ...media].map((item, i) => (
+                    <div key={`${item.id}-${i}`} className={styles.marqueeItem}>
+                      {item.media_url ? (
+                        item.media_type === 'image' ? (
+                          <img src={item.media_url} alt={item.title} className={styles.marqueeImg} loading="lazy" />
+                        ) : (
+                          <video src={item.media_url} className={styles.marqueeImg} muted loop autoPlay playsInline style={{ objectFit: 'cover', height: '100%', width: '100%' }} />
+                        )
+                      ) : (
+                        <div
+                          className={styles.marqueePlaceholder}
+                          style={{ background: placeholderColors[i % placeholderColors.length] }}
+                        >
+                          {(() => { const Icon = galleryIcons[i % galleryIcons.length]; return <Icon size={32} color="white" />; })()}
+                        </div>
+                      )}
+                    </div>
+                  ))
+                : [...Array(12)].map((_, i) => (
+                    <div key={i} className={styles.marqueeItem}>
+                      <div
+                        className={styles.marqueePlaceholder}
+                        style={{ background: placeholderColors[i % placeholderColors.length] }}
+                      >
+                        {(() => { const Icon = galleryIcons[i % galleryIcons.length]; return <Icon size={32} color="white" />; })()}
+                      </div>
+                    </div>
+                  ))}
+            </div>
+          </div>
+          <div className="text-center" style={{ marginTop: '40px' }}>
+            <Link href="/gallery" className="btn-outline" id="home-gallery-btn">
+              View Full Gallery 📸
+            </Link>
           </div>
         </div>
       </section>
@@ -543,57 +594,6 @@ export default function HomePage() {
                 Explore Our Approach →
               </Link>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== GALLERY PREVIEW ===== */}
-      <section className={`section-padding ${styles.gallery}`}>
-        <div className="container">
-          <div className="text-center">
-            <span className="badge"><Camera size={16} style={{display: 'inline', marginRight: '4px'}} /> School Life</span>
-            <h2 className="section-title">Moments at Little Star</h2>
-            <p className="section-subtitle">
-              Capturing the joy, learning, and friendships that make every day special.
-            </p>
-          </div>
-          <div className={styles.marqueeWrap}>
-            <div className={styles.marqueeTrack}>
-              {mounted && [...media, ...media].length > 0
-                ? [...media, ...media].map((item, i) => (
-                    <div key={`${item.id}-${i}`} className={styles.marqueeItem}>
-                      {item.media_url ? (
-                        item.media_type === 'image' ? (
-                          <img src={item.media_url} alt={item.title} className={styles.marqueeImg} loading="lazy" />
-                        ) : (
-                          <video src={item.media_url} className={styles.marqueeImg} muted loop autoPlay playsInline style={{ objectFit: 'cover', height: '100%', width: '100%' }} />
-                        )
-                      ) : (
-                        <div
-                          className={styles.marqueePlaceholder}
-                          style={{ background: placeholderColors[i % placeholderColors.length] }}
-                        >
-                          {(() => { const Icon = galleryIcons[i % galleryIcons.length]; return <Icon size={32} color="white" />; })()}
-                        </div>
-                      )}
-                    </div>
-                  ))
-                : [...Array(12)].map((_, i) => (
-                    <div key={i} className={styles.marqueeItem}>
-                      <div
-                        className={styles.marqueePlaceholder}
-                        style={{ background: placeholderColors[i % placeholderColors.length] }}
-                      >
-                        {(() => { const Icon = galleryIcons[i % galleryIcons.length]; return <Icon size={32} color="white" />; })()}
-                      </div>
-                    </div>
-                  ))}
-            </div>
-          </div>
-          <div className="text-center" style={{ marginTop: '40px' }}>
-            <Link href="/gallery" className="btn-outline" id="home-gallery-btn">
-              View Full Gallery 📸
-            </Link>
           </div>
         </div>
       </section>

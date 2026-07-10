@@ -74,7 +74,7 @@ export default function ContactPage() {
               {/* Quick Info */}
               <div className={styles.quickInfo}>
                 <h3 className={styles.quickTitle}>🎒 Admissions</h3>
-                <p>Applications for 2024–25 are currently open. Visit us or fill out the form to get started!</p>
+                <p>Applications for 2026–27 are currently open. Visit us or fill out the form to get started!</p>
               </div>
             </div>
 
