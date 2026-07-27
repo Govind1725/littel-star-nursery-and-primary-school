@@ -138,7 +138,7 @@ export default function ChildCarePage() {
               
               <ul className={styles.checklist}>
                 <li><strong>Uniform:</strong> Red t-shirt & Navy blue bottom.</li>
-                <li><strong>Footwear:</strong> Comfortable velcro shoes & socks.</li>
+                <li><strong>Footwear:</strong> Comfortable velcro shoes & socks( black ).</li>
                 <li><strong>What to Bring:</strong>
                   <ul>
                     <li>Water bottle (labeled)</li>
@@ -192,7 +192,7 @@ export default function ChildCarePage() {
               </ul>
             </div>
             <div className={styles.splitImage}>
-              <img src="/images/primary school.png" alt="Primary School Dress Code" className={styles.photo} />
+              <img src="/images/primary school uniform.png" alt="Primary School Dress Code" className={styles.photo} />
             </div>
           </div>
         </div>

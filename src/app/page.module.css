@@ -1732,12 +1732,13 @@
 }
 .welcomeImgWrap {
   position: relative;
-  aspect-ratio: 4/3;
+  aspect-ratio: 3/4;
 }
 .welcomeImg {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 85%;
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-lg);
 }

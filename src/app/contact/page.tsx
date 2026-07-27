@@ -1,23 +1,82 @@
 'use client';
 
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 import styles from './contact.module.css';
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: '', dob: '', email: '', phone: '', subject: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors: { [key: string]: string } = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!form.name.trim() || form.name.trim().length < 2) {
+      newErrors.name = 'Student name must be at least 2 characters.';
+    }
+
+    if (!form.dob) {
+      newErrors.dob = 'Please select a date of birth.';
+    }
+
+    if (!form.email.trim() || !emailRegex.test(form.email.trim())) {
+      newErrors.email = 'Please enter a valid email address.';
+    }
+
+    if (!form.subject) {
+      newErrors.subject = 'Please select a subject.';
+    }
+
+    if (!form.message.trim() || form.message.trim().length < 5) {
+      newErrors.message = 'Message must be at least 5 characters long.';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      toast.error('Please fix the errors in the form before submitting.');
+      return;
+    }
+
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 1500));
-    setLoading(false);
-    setSubmitted(true);
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        toast.success('Thank you! Your message has been sent successfully.');
+        setSubmitted(true);
+      } else {
+        toast.error(data.message || 'Failed to send message. Please try again.');
+      }
+    } catch (error) {
+      console.error('Contact submission error:', error);
+      toast.error('An unexpected error occurred. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const contactInfo = [
@@ -87,14 +146,14 @@ export default function ContactPage() {
                   <p>Thank you for reaching out! We&apos;ll get back to you within 24 hours.</p>
                   <button
                     className="btn-primary"
-                    onClick={() => { setSubmitted(false); setForm({ name: '', dob: '', email: '', phone: '', subject: '', message: '' }); }}
+                    onClick={() => { setSubmitted(false); setForm({ name: '', dob: '', email: '', phone: '', subject: '', message: '' }); setErrors({}); }}
                     id="contact-send-another-btn"
                   >
                     Send Another Message
                   </button>
                 </div>
               ) : (
-                <form className={styles.form} onSubmit={handleSubmit}>
+                <form className={styles.form} onSubmit={handleSubmit} noValidate>
                   <h3 className={styles.formTitle}>Send us a Message ✉️</h3>
                   <div className={styles.formRow}>
                     <div className={styles.formGroup}>
@@ -103,16 +162,18 @@ export default function ContactPage() {
                         id="name" name="name" type="text"
                         placeholder="Student's full name"
                         value={form.name} onChange={handleChange}
-                        required className={styles.input}
+                        required className={`${styles.input} ${errors.name ? styles.inputError : ''}`}
                       />
+                      {errors.name && <span className={styles.errorText}>{errors.name}</span>}
                     </div>
                     <div className={styles.formGroup}>
                       <label htmlFor="dob">Date of Birth *</label>
                       <input
                         id="dob" name="dob" type="date"
                         value={form.dob} onChange={handleChange}
-                        required className={styles.input}
+                        required className={`${styles.input} ${errors.dob ? styles.inputError : ''}`}
                       />
+                      {errors.dob && <span className={styles.errorText}>{errors.dob}</span>}
                     </div>
                     <div className={styles.formGroup}>
                       <label htmlFor="email">Email Address *</label>
@@ -120,8 +181,9 @@ export default function ContactPage() {
                         id="email" name="email" type="email"
                         placeholder="your@email.com"
                         value={form.email} onChange={handleChange}
-                        required className={styles.input}
+                        required className={`${styles.input} ${errors.email ? styles.inputError : ''}`}
                       />
+                      {errors.email && <span className={styles.errorText}>{errors.email}</span>}
                     </div>
                   </div>
                   <div className={styles.formRow}>
@@ -139,7 +201,7 @@ export default function ContactPage() {
                       <select
                         id="subject" name="subject"
                         value={form.subject} onChange={handleChange}
-                        required className={styles.input}
+                        required className={`${styles.input} ${errors.subject ? styles.inputError : ''}`}
                       >
                         <option value="">Select a subject</option>
                         <option value="admission">Admission Inquiry</option>
@@ -148,6 +210,7 @@ export default function ContactPage() {
                         <option value="general">General Inquiry</option>
                         <option value="other">Other</option>
                       </select>
+                      {errors.subject && <span className={styles.errorText}>{errors.subject}</span>}
                     </div>
                   </div>
                   <div className={styles.formGroup}>
@@ -156,8 +219,9 @@ export default function ContactPage() {
                       id="message" name="message"
                       placeholder="Tell us how we can help you..."
                       value={form.message} onChange={handleChange}
-                      required rows={5} className={`${styles.input} ${styles.textarea}`}
+                      required rows={5} className={`${styles.input} ${styles.textarea} ${errors.message ? styles.inputError : ''}`}
                     />
+                    {errors.message && <span className={styles.errorText}>{errors.message}</span>}
                   </div>
                   <button
                     type="submit"

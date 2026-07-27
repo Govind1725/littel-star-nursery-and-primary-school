@@ -64,9 +64,9 @@ const whyChooseUs = [
 ];
 
 const lifeAtSchool = [
-  { img: '/images/campus_building.png', label: 'Our Campus', caption: 'Safe, vibrant, and purpose-built spaces for play and learning.' },
-  { img: '/images/learning_time.png', label: 'Learning Time', caption: 'Activity-based lessons that make every concept come alive.' },
-  { img: '/images/play_time.png', label: 'Play Time', caption: 'Unstructured play fosters creativity, motor skills, and joy.' },
+  { img: '/images/A Day at Little Star 1.png', label: 'Our Campus', caption: 'Safe, vibrant, and purpose-built spaces for play and learning.' },
+  { img: '/images/A Day at Little Star 3.png', label: 'Learning Time', caption: 'Activity-based lessons that make every concept come alive.' },
+  { img: '/images/A Day at Little Star 2.png', label: 'Play Time', caption: 'Unstructured play fosters creativity, motor skills, and joy.' },
 ];
 
 const stats = [
@@ -335,14 +335,14 @@ export default function HomePage() {
                 <Heart size={16} fill="#F97316" color="#F97316" /> Loved by 500+ families!
               </div>
               <Image 
-                src="/images/campus_building.png" 
-                alt="Welcome to Little Star" 
+                src="/images/A Day at Little Star.png" 
+                alt="A Day at Little Star" 
                 width={600} 
                 height={450} 
                 className={styles.welcomeImg}
               />
               <div className={styles.welcomeBadgeBottom}>
-                <Sparkles size={16} fill="#EAB308" color="#EAB308" /> Est. 2010
+                <Sparkles size={16} fill="#EAB308" color="#EAB308" /> Est. 2001
               </div>
             </div>
             
@@ -352,7 +352,8 @@ export default function HomePage() {
                 WELCOME TO LITTLE STAR
               </span>
               <h2 className={styles.welcomeTitle}>A Day at Little Star</h2>
-              
+              <p style={{ fontSize: '1.15rem', fontWeight: 700, color: '#7C3AED', letterSpacing: '1px', margin: '8px 0 16px' }}>Best Education with Best Care</p>
+
               <p className={styles.welcomeText}>
                 At Little Star Nursery & Primary School, we believe that the early years are the most critical in shaping a child&apos;s future. Our dedicated team of educators creates a safe, stimulating, and joyful environment.
               </p>
