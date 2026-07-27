@@ -78,19 +78,19 @@ const stats = [
 
 const testimonials = [
   {
-    name: 'Priya Sharma',
+    name: 'Manikandan',
     role: 'Parent of Aarav, Grade 2',
     text: 'Little Star has been a wonderful journey for our son. The teachers are so caring and the environment is full of joy!',
     emoji: User,
   },
   {
-    name: 'Rajesh Kumar',
+    name: 'Priya',
     role: 'Parent of Ananya, LKG',
     text: 'My daughter looks forward to school every single day. The activities are amazing and she has grown so much!',
     emoji: User,
   },
   {
-    name: 'Meena Patel',
+    name: 'Surya Kannan',
     role: 'Parent of Rohan, Nursery',
     text: 'The staff is incredibly supportive. Little Star truly feels like a second home for the children.',
     emoji: BriefcaseBusiness,
