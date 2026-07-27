@@ -335,7 +335,7 @@ export default function HomePage() {
                 <Heart size={16} fill="#F97316" color="#F97316" /> Loved by 500+ families!
               </div>
               <Image 
-                src="/images/A Day at Little Star.png" 
+                src="/images/A Day at Little Star.jpg" 
                 alt="A Day at Little Star" 
                 width={600} 
                 height={450} 
