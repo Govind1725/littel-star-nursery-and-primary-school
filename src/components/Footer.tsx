@@ -140,7 +140,7 @@ export default function Footer() {
 
           <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', marginTop: '30px', paddingTop: '20px', color: '#DDD', fontSize: '0.85rem' }}>
             <p style={{ margin: 0, textAlign: 'center' }}>
-              <strong>Serving Chennai Neighborhoods:</strong> Nerkundram • Kodambakkam • Koyambedu • Maduravoyal • Arumbakkam • Virugambakkam • Anna Nagar West • Mogappair
+              <strong>Serving Chennai Neighborhoods:</strong> Nerkundram • Kodambakkam • Koyambedu • Virugambakkam
             </p>
           </div>
         </div>
