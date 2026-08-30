@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /api/
 
-Sitemap: https://littlestarnpschool.com/sitemap.xml
+Sitemap: https://www.littlestarnpschool.com/sitemap.xml

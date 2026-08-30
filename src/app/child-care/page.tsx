@@ -3,11 +3,12 @@
 import { useState } from 'react';
 import styles from './child-care.module.css';
 import Link from 'next/link';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 const faqs = [
-  { q: 'What are the school timings?', a: 'Our standard hours are 9:00 AM to 3:30 PM. We also offer extended daycare facilities.' },
+  { q: 'What are the school timings?', a: 'Our standard hours are 8:45 AM to 3:30 PM. We also offer extended daycare facilities from 8:30 AM to 8:00 PM.' },
   { q: 'What is the leave policy?', a: 'Please inform the class teacher via the school diary or app if your child will be absent.' },
-  { q: 'How are fee payments handled?', a: 'Fees are collected term-wise. You can pay online or via the admin office.' },
+  { q: 'How are fee payments handled?', a: 'Fees are collected term-wise. You can pay online or via the school admin office.' },
   { q: 'When are parent-teacher meetings?', a: 'PTMs are held at the end of every term, but parents can request an appointment anytime.' },
 ];
 
@@ -15,15 +16,26 @@ export default function ChildCarePage() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggleFaq = (i: number) => setOpenIndex(openIndex === i ? null : i);
+
   return (
     <>
+      <Breadcrumbs items={[{ name: 'Child Care & Guidelines', url: '/child-care' }]} />
+
       {/* ===== HERO ===== */}
-      <section className="page-hero">
+      <section className="page-hero" style={{ background: 'linear-gradient(135deg, #4C1D95 0%, #7C3AED 100%)', color: '#FFF', padding: '60px 0 70px', textAlign: 'center' }}>
         <div className="container">
-          <h1>Caring for Every Child</h1>
-          <p>
-            A safe, nurturing, and joyful environment where your child can learn, play, and grow.
+          <span className="badge" style={{ background: '#FEF08A', color: '#4C1D95', fontWeight: 800 }}>Student Care &amp; Parent Guidelines</span>
+          <h1 style={{ fontSize: 'clamp(2rem, 3.5vw, 3rem)', margin: '16px 0', color: '#FFF' }}>
+            Child Care &amp; Student Guidelines at Little Star
+          </h1>
+          <p style={{ maxWidth: '750px', margin: '0 auto', fontSize: '1.15rem', opacity: 0.95 }}>
+            A safe, nurturing, and joyful environment where your child can learn, play, and grow. Explore our daily routines, healthy snack chart, and dress code policies.
           </p>
+          <div style={{ marginTop: '24px' }}>
+            <Link href="/daycare" className="btn-primary" style={{ background: '#FFD700', color: '#4C1D95', fontWeight: 700 }}>
+              View Extended Day Care Services (8:30 AM – 8:00 PM) &rarr;
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -31,29 +43,29 @@ export default function ChildCarePage() {
       <section className={`section-padding ${styles.approachSection}`}>
         <div className="container">
           <div className="text-center">
-            <span className="badge">Our Approach</span>
-            <h2 className="section-title">Nurturing Hearts & Minds</h2>
+            <span className="badge">Our Care Approach</span>
+            <h2 className="section-title">Nurturing Hearts &amp; Minds in Nerkundram</h2>
             <p className="section-subtitle">
-              We focus on holistic development through individualized attention and joyful learning.
+              We focus on holistic development through individualized attention, safety, and joyful learning.
             </p>
           </div>
 
           <div className={styles.gridCards}>
             <div className={styles.approachCard}>
               <h3>Individual Attention</h3>
-              <p>Every child is unique. Our low student-teacher ratio ensures personalized care.</p>
+              <p>Every child is unique. Our low student-teacher ratio ensures personalized care and attention.</p>
             </div>
             <div className={styles.approachCard}>
               <h3>Positive Reinforcement</h3>
-              <p>We build confidence by celebrating small wins and encouraging effort.</p>
+              <p>We build confidence by celebrating small wins and encouraging effort in every student.</p>
             </div>
             <div className={styles.approachCard}>
               <h3>Social Skill Building</h3>
-              <p>Interactive group activities help children learn sharing, empathy, and teamwork.</p>
+              <p>Interactive group activities help children learn sharing, empathy, cooperation, and teamwork.</p>
             </div>
             <div className={styles.approachCard}>
               <h3>Learning Through Play</h3>
-              <p>Language, numbers, art, and music are integrated seamlessly into playtime.</p>
+              <p>Language, numbers, art, and music are integrated seamlessly into guided playtime.</p>
             </div>
           </div>
         </div>
@@ -64,7 +76,7 @@ export default function ChildCarePage() {
         <div className="container" style={{ textAlign: 'center', maxWidth: '1200px' }}>
           <div className={styles.routineBadge}>DAILY ROUTINE</div>
           <h2 className={styles.routineTitle}>A Day at Little Star</h2>
-          <p className={styles.routineSub}>A balanced schedule of learning, play, and rest.</p>
+          <p className={styles.routineSub}>A balanced schedule of learning, play, snack breaks, and rest.</p>
 
           <div className={styles.routineTimeline}>
             <div className={styles.timelineLine}></div>
@@ -104,23 +116,23 @@ export default function ChildCarePage() {
                   <thead>
                     <tr>
                       <th>DAY</th>
-                      <th>OPTION - 1<br /><small>(NUTS / GRAIN & PROTEIN)</small></th>
-                      <th>OPTION - 2<br /><small>(FRESH FRUITS & VEGGIES)</small></th>
+                      <th>OPTION - 1<br /><small>(NUTS / GRAIN &amp; PROTEIN)</small></th>
+                      <th>OPTION - 2<br /><small>(FRESH FRUITS &amp; VEGGIES)</small></th>
                       <th>OPTION 3<br /><small>(PROTEIN BOOST)</small></th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr><td>Monday</td><td>Mixed Nuts (Almonds, Walnuts & cashews)</td><td>Fresh Apple slices / Carrot slices</td><td>Roasted chickpeas or boiled sweet corn</td></tr>
+                    <tr><td>Monday</td><td>Mixed Nuts (Almonds, Walnuts &amp; cashews)</td><td>Fresh Apple slices / Carrot slices</td><td>Roasted chickpeas or boiled sweet corn</td></tr>
                     <tr><td>Tuesday</td><td>Mini veg or paneer sandwich on whole-wheat bread</td><td>Sliced watermelon, grapes, or mixed berries</td><td>Roasted/boiled peanuts or mixed roasted nuts</td></tr>
                     <tr><td>Wednesday</td><td>Roasted chickpeas or Roasted peanuts</td><td>Banana with a small handful of raisins</td><td>Nuts bar / Dates</td></tr>
                     <tr><td>Thursday</td><td>Boiled green gram / green gram sprouts</td><td>Mixed fruit salad / Cucumber slices</td><td>Hard boiled egg - 1</td></tr>
-                    <tr><td>Friday</td><td>Home made veg rolls</td><td>Orange wedges / Pineapple slices</td><td>Sprouts salad.</td></tr>
+                    <tr><td>Friday</td><td>Home made veg rolls</td><td>Orange wedges / Pineapple slices</td><td>Sprouts salad</td></tr>
                   </tbody>
                 </table>
               </div>
 
               <div className={styles.noteBox}>
-                <strong>Note :</strong> As part of our commitment to your child's well-being and academic focus, we kindly request your support in packing nutritious, home-cooked snacks for school. We actively discourage highly processed items like chips, biscuits, and chocolates, as they can cause energy crashes and affect concentration. Instead, we encourage you to pack brain-boosting, energy-rich alternatives.
+                <strong>Note :</strong> As part of our commitment to your child&apos;s well-being and academic focus, we kindly request your support in packing nutritious, home-cooked snacks for school. We actively discourage highly processed items like chips, biscuits, and chocolates, as they can cause energy crashes and affect concentration. Instead, we encourage you to pack brain-boosting, energy-rich alternatives.
               </div>
             </div>
           </div>
@@ -133,12 +145,12 @@ export default function ChildCarePage() {
           <div className={styles.splitLayoutReverse}>
             <div className={styles.splitText}>
               <span className="badge">Get Ready</span>
-              <h2 className="section-title">UKG / Nursery</h2>
-              <p>Comfort is key. Our uniform is designed to be vibrant and play-friendly.</p>
+              <h2 className="section-title">UKG / Nursery Uniform Code</h2>
+              <p>Comfort is key. Our uniform is designed to be vibrant, durable, and play-friendly.</p>
               
               <ul className={styles.checklist}>
-                <li><strong>Uniform:</strong> Red t-shirt & Navy blue bottom.</li>
-                <li><strong>Footwear:</strong> Comfortable velcro shoes & socks( black ).</li>
+                <li><strong>Uniform:</strong> Red t-shirt &amp; Navy blue bottom.</li>
+                <li><strong>Footwear:</strong> Comfortable velcro shoes &amp; socks (black).</li>
                 <li><strong>What to Bring:</strong>
                   <ul>
                     <li>Water bottle (labeled)</li>
@@ -150,49 +162,41 @@ export default function ChildCarePage() {
               </ul>
             </div>
             <div className={styles.splitImage}>
-              <img src="/images/kg school.png" alt="UKG / Nursery Dress Code" className={styles.photo} />
+              <img src="/images/kg school.png" alt="Little Star Nursery School Uniform Code" className={styles.photo} />
             </div>
           </div>
         </div>
       </section>
 
-      {/* ===== PRIMARY SCHOOL ===== */}
+      {/* ===== PRIMARY SCHOOL UNIFORM ===== */}
       <section className={`section-padding ${styles.dressSection}`}>
         <div className="container">
           <div className={styles.splitLayoutReverse}>
             <div className={styles.splitText}>
               <span className="badge">Get Ready</span>
-              <h2 className="section-title">Primary School</h2>
-              <p>Comfort is key. Our uniform is designed to be vibrant and play-friendly.</p>
+              <h2 className="section-title">Primary School Uniform Code</h2>
+              <p>Smart and comfortable dress code for Classes I through V.</p>
               
               <ul className={styles.checklist}>
                 <li>
-                  <strong>👦 Boy</strong>
+                  <strong>👦 Boy Student Uniform</strong>
                   <ul style={{ marginTop: '6px', listStyle: 'none', paddingLeft: 0 }}>
-                    <li><strong>Top:</strong> Short Sleeve Striped School Shirt - Light Pink & White Vertical Striped Shirt</li>
+                    <li><strong>Top:</strong> Short Sleeve Striped School Shirt - Light Pink &amp; White Vertical Striped Shirt</li>
                     <li><strong>Bottom:</strong> Grey School Shorts - Mid Grey Uniform Shorts</li>
                   </ul>
                 </li>
                 <li style={{ marginTop: '12px' }}>
-                  <strong>👧 Girl</strong>
+                  <strong>👧 Girl Student Uniform</strong>
                   <ul style={{ marginTop: '6px', listStyle: 'none', paddingLeft: 0 }}>
-                    <li><strong>Top:</strong> Short Sleeve Striped School Shirt - Light Pink & White Vertical Striped Shirt</li>
+                    <li><strong>Top:</strong> Short Sleeve Striped School Shirt - Light Pink &amp; White Vertical Striped Shirt</li>
                     <li><strong>Bottom:</strong> Pleated Grey Pinafore</li>
                   </ul>
                 </li>
-                <li><strong>Footwear:</strong> Comfortable velcro shoes & socks.</li>
-                <li><strong>What to Bring:</strong>
-                  <ul>
-                    <li>Water bottle (labeled)</li>
-                    <li>Extra pair of clothes</li>
-                    <li>Lunch box (if opting out of school meals)</li>
-                    <li>School diary</li>
-                  </ul>
-                </li>
+                <li><strong>Footwear:</strong> Comfortable velcro shoes &amp; black socks.</li>
               </ul>
             </div>
             <div className={styles.splitImage}>
-              <img src="/images/primary school uniform.png" alt="Primary School Dress Code" className={styles.photo} />
+              <img src="/images/primary school uniform.png" alt="Little Star Primary School Uniform Code" className={styles.photo} />
             </div>
           </div>
         </div>
@@ -203,12 +207,12 @@ export default function ChildCarePage() {
         <div className="container">
           <div className={styles.gridCards}>
             <div className={styles.card}>
-              <h3>Health & Safety</h3>
+              <h3>Health &amp; Safety Protocols</h3>
               <p>Regular health checks, strict hygiene practices, and immediate emergency contact protocols. Medication is only administered with strict parental consent.</p>
             </div>
             <div className={styles.card}>
-              <h3>Daily Updates</h3>
-              <p>We share daily photos, activity reports, and progress tracking directly with parents so you never miss a milestone.</p>
+              <h3>Parent Communication</h3>
+              <p>We share regular updates, activity reports, and progress tracking directly with parents so you stay connected with your child&apos;s daily growth.</p>
             </div>
           </div>
         </div>
