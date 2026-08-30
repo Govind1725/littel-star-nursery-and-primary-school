@@ -199,29 +199,51 @@
 /* Bottom Bar */
 .bottomBar {
   background: var(--violet-deep);
-  padding: 16px 0;
+  padding: 20px 0;
 }
 
-.bottomBar .container {
+.bottomContent {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
+  text-align: center;
+  gap: 8px;
 }
 
-.bottomBar p {
-  color: rgba(255,255,255,0.5);
+.copyrightText {
+  color: rgba(255,255,255,0.65);
   font-size: 0.85rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.developerText {
+  color: rgba(255,255,255,0.85);
+  font-size: 0.85rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+.developerText a {
+  color: var(--yellow);
+  text-decoration: none;
+  font-weight: 700;
+  transition: color 0.2s ease;
+}
+
+.developerText a:hover {
+  text-decoration: underline;
 }
 
 .bottomLinks {
   display: flex;
-  gap: 20px;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
 }
 
 .bottomLinks a {
-  color: rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.6);
   font-size: 0.85rem;
   transition: color 0.2s;
   text-decoration: none;
@@ -229,6 +251,11 @@
 
 .bottomLinks a:hover {
   color: var(--yellow);
+}
+
+.dot {
+  color: rgba(255,255,255,0.3);
+  font-size: 0.8rem;
 }
 
 /* Responsive */
@@ -243,9 +270,5 @@
   .grid {
     grid-template-columns: 1fr;
     gap: 32px;
-  }
-  .bottomBar .container {
-    flex-direction: column;
-    text-align: center;
   }
 }

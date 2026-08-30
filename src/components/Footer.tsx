@@ -149,11 +149,20 @@ export default function Footer() {
       {/* Bottom bar */}
       <div className={styles.bottomBar}>
         <div className="container">
-          <p>© 2026 Little Star Nursery &amp; Primary School | Star Kids Pre School &amp; Day Care | Star Tuition Centre. All rights reserved. Developed &amp; Maintained by <a href="tel:+918012127109" style={{ color: 'inherit', textDecoration: 'none' }}>Jcode Digital Solution | +91 8012127109</a></p>
-          <div className={styles.bottomLinks}>
-            <Link href="/faq">FAQ</Link>
-            <Link href="/contact">Contact</Link>
-            <Link href="/admin">Admin</Link>
+          <div className={styles.bottomContent}>
+            <p className={styles.copyrightText}>
+              © 2026 Little Star Nursery &amp; Primary School | Star Kids Pre School &amp; Day Care | Star Tuition Centre. All rights reserved.
+            </p>
+            <p className={styles.developerText}>
+              Developed &amp; Maintained by <a href="tel:+918012127109">Jcode Digital Solution | +91 8012127109</a>
+            </p>
+            <div className={styles.bottomLinks}>
+              <Link href="/faq">FAQ</Link>
+              <span className={styles.dot}>•</span>
+              <Link href="/contact">Contact</Link>
+              <span className={styles.dot}>•</span>
+              <Link href="/admin">Admin</Link>
+            </div>
           </div>
         </div>
       </div>
